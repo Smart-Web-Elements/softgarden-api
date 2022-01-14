@@ -1,14 +1,18 @@
 {
   "name": "swe/softgarden-api",
   "description": "An API to the job portal SoftGarden",
-  "type": "project",
+  "type": "library",
+  "keywords": [
+    "softgarden",
+    "api"
+  ],
   "minimum-stability": "stable",
-  "license": "proprietary",
+  "license": "MIT",
   "authors": [
     {
-      "name": "Luca Braun",
-      "email": "l.braun@s-w-e.com",
-      "role": "Developer"
+      "name": "Smart Web Elements",
+      "homepage": "https://github.com/smart-web-elements",
+      "email": "team@s-w-e.com"
     }
   ],
   "autoload": {

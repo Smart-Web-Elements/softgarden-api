@@ -1,4 +1,4 @@
-# SoftGarden API v1.1.0
+# SoftGarden API
 
 This is an API to simplify your connection to SoftGarden. The class `\SWE\SoftGardenApi\Api\SoftGarden` contains some
 methods to get some specific data.

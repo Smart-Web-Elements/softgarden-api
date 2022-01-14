@@ -1,4 +1,4 @@
-# SoftGarden API v1.1.0
+# SoftGarden API
 
 Die SoftGarden API ist eine Schnittstelle, welche eine Verbindung zu SoftGarden erleichtert. In der
 Klasse `\SWE\SoftGardenApi\Api\SoftGarden` sind einige Methoden zum Abrufen bestimmter Daten enthalten.
