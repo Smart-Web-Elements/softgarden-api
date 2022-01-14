@@ -1,0 +1,30 @@
+{
+  "name": "swe/softgarden-api",
+  "description": "An API to the job portal SoftGarden",
+  "type": "project",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Luca Braun",
+      "email": "l.braun@s-w-e.com",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "SWE\\SoftGardenApi\\": "src/"
+    }
+  },
+  "homepage": "https://www.smart-web-elements.com",
+  "readme": "readme.md",
+  "require": {
+    "ext-curl": "*",
+    "ext-json": "*",
+    "guzzlehttp/guzzle": "^7",
+    "php": "^7.4 || ^8.0"
+  },
+  "support": {
+    "email": "team@s-w-e.com"
+  }
+}
