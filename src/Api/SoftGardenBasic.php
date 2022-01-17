@@ -4,6 +4,7 @@ namespace SWE\SoftGardenApi\Api;
 
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * Class SoftGardenBasic
@@ -117,6 +118,7 @@ abstract class SoftGardenBasic
      * @param bool $post OPTIONAL. Use the post method. Defaults to false.
      * @param array $postFields OPTIONAL. The post arguments that will be sent als query parameters.
      * @return array The decoded json response as associative array.
+     * @throws GuzzleException
      */
     protected function getResponse(bool $post = false, array $postFields = []): array
     {

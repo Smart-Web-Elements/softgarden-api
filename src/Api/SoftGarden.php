@@ -3,6 +3,7 @@
 namespace SWE\SoftGardenApi\Api;
 
 
+use GuzzleHttp\Exception\GuzzleException;
 use SWE\SoftGardenApi\Channel;
 use SWE\SoftGardenApi\Collection;
 use SWE\SoftGardenApi\Job;
@@ -43,6 +44,7 @@ class SoftGarden extends SoftGardenBasic
      * @param string $type The catalogue type.
      * @param string $typeId The id of the catalogue.
      * @return string Returns the result as string.
+     * @throws GuzzleException
      */
     public function getCatalogByType(string $type, string $typeId): string
     {
@@ -68,6 +70,7 @@ class SoftGarden extends SoftGardenBasic
      * Get all channels.
      *
      * @return Collection A collection with all channels.
+     * @throws GuzzleException
      */
     public function getChannels(): Collection
     {
@@ -87,6 +90,7 @@ class SoftGarden extends SoftGardenBasic
      * @param string $channelId The channel id.
      * @param int $jobId The job id.
      * @return Job The job instance.
+     * @throws GuzzleException
      */
     public function getJob(string $channelId, int $jobId): Job
     {
@@ -107,6 +111,7 @@ class SoftGarden extends SoftGardenBasic
      *
      * @param string $channelId The channel id.
      * @return JobSearchResult The JobSearchResult instance.
+     * @throws GuzzleException
      */
     public function getJobBasket(string $channelId): JobSearchResult
     {
@@ -134,6 +139,7 @@ class SoftGarden extends SoftGardenBasic
      *
      * @param int $jobId The job id.
      * @return Collection A collection with all questions of the job.
+     * @throws GuzzleException
      */
     public function getJobQuestions(int $jobId): Collection
     {
@@ -153,6 +159,7 @@ class SoftGarden extends SoftGardenBasic
      *
      * @param string $channelId The channel id.
      * @return Collection A collection with all jobs of the channel.
+     * @throws GuzzleException
      */
     public function getJobs(string $channelId): Collection
     {
@@ -191,6 +198,7 @@ class SoftGarden extends SoftGardenBasic
      * @param string $search OPTIONAL. The word we are searching for.
      * @param string $geoLocation OPTIONAL. The geolocation we are searching for.
      * @return JobSearchResult The JobSearchResult instance.
+     * @throws GuzzleException
      */
     public function searchForJob(string $channelId, string $search = '', string $geoLocation = ''): JobSearchResult
     {

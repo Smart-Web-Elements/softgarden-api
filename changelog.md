@@ -3,6 +3,7 @@
 ## SoftGarden API v1.1.2
 
 - Optimized some code
+- Added missing `@throw` in PhpDocs
 
 ## SoftGarden API v1.1.1
 
