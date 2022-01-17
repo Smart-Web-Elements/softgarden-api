@@ -63,10 +63,7 @@ abstract class AbstractDataSet
         $objectVars = get_object_vars($this);
 
         foreach (get_class_vars(static::class) as $key => $value) {
-            if (array_key_exists($key, $objectVars) && $value === null) {
-                $value = $objectVars[$key];
-            }
-            if (array_key_exists($key, $objectVars) && $value !== $objectVars[$key]) {
+            if (array_key_exists($key, $objectVars) && ($value === null || $value !== $objectVars[$key])) {
                 $value = $objectVars[$key];
             }
 

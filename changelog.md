@@ -1,5 +1,9 @@
 # SoftGarden API
 
+## SoftGarden API v1.1.2
+
+- Optimized some code
+
 ## SoftGarden API v1.1.1
 
 - Updated some meta information in composer.json
