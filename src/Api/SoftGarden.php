@@ -4,6 +4,7 @@ namespace SWE\SoftGardenApi\Api;
 
 
 use GuzzleHttp\Exception\GuzzleException;
+use SWE\SoftGardenApi\ApplicantData;
 use SWE\SoftGardenApi\Channel;
 use SWE\SoftGardenApi\Collection;
 use SWE\SoftGardenApi\Job;
@@ -222,5 +223,30 @@ class SoftGarden extends SoftGardenBasic
             '',
             $this->useAutomaticCatalogueCompletion
         );
+    }
+
+    /**
+     * Create a new applicant.
+     *
+     * @param array $data
+     * @return string|ApplicantData
+     * @throws GuzzleException
+     */
+    public function createApplicant(array $data)
+    {
+        $applicant = new ApplicantData($data);
+
+
+        $this->uri = 'frontend/applicants';
+        $this->version = 3;
+        try {
+            $this->getResponse(true, $data);
+        } catch (GuzzleException $e) {
+            $message = explode(':', $e->getMessage());
+
+            return trim(array_pop($message));
+        }
+
+        return $applicant;
     }
 }

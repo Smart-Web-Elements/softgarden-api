@@ -134,7 +134,11 @@ abstract class SoftGardenBasic
         ];
 
         if (!empty($postFields)) {
-            $options['query'] = $postFields;
+            if ($post) {
+                $options['json'] = $postFields;
+            } else {
+                $options['query'] = $postFields;
+            }
         }
 
         if (DEBUG) {
