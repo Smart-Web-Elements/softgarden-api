@@ -236,7 +236,6 @@ class SoftGarden extends SoftGardenBasic
     {
         $applicant = new ApplicantData($data);
 
-
         $this->uri = 'frontend/applicants';
         $this->version = 3;
         try {
@@ -249,4 +248,29 @@ class SoftGarden extends SoftGardenBasic
 
         return $applicant;
     }
+
+    /**
+     * Get UAT
+     */
+    public function getUserAccessToken(ApplicantData $applicant)
+    {
+
+        $this->uri = 'oauth/frontend/token';
+        $this->version = 3;
+        $data = [
+            "grant_type"=>"password",
+            "username"=>$applicant->getUsername(),
+            "password"=>$applicant->getPassword(),
+        ];
+        try {
+            $response = $this->getResponse(true, $data);
+        } catch (GuzzleException $e) {
+            $message = explode(':', $e->getMessage());
+
+            return trim(array_pop($message));
+        }
+
+        return $response["access_token"];
+    }
+
 }
