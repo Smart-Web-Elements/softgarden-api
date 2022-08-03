@@ -34,6 +34,8 @@ class ApplicationData extends AbstractDataSet
 
     protected string $locale = 'de';
 
+    protected string $street = '';
+
     protected string $zip = '';
 
     protected string $city = '';
@@ -205,6 +207,16 @@ class ApplicationData extends AbstractDataSet
         $this->locale = $locale;
     }
 
+    public function getStreet()
+    {
+        return $this->street;
+    }
+
+    public function setStreet(string $street): void
+    {
+        $this->street = $street;
+    }
+
     public function getZip()
     {
         return $this->zip;
@@ -224,7 +236,7 @@ class ApplicationData extends AbstractDataSet
     {
         $this->city = $city;
     }
-    
+
     public function getCountry()
     {
         return $this->country;
