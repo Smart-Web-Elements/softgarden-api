@@ -47,6 +47,8 @@ abstract class SoftGardenBasic
      * @var string
      */
     protected string $clientId;
+
+    protected string $clientSecret;
     /**
      * The Guzzle HTTP Client, used for easy requests.
      *
@@ -59,7 +61,7 @@ abstract class SoftGardenBasic
      *
      * @param string $clientId OPTIONAL. The client id for the authentication of each request.
      */
-    public function __construct(string $clientId = '')
+    public function __construct(string $clientId = '', string $clientSecret = '')
     {
         // Check if the DEBUG constant is set.
         self::checkDebugConstant();
@@ -69,7 +71,7 @@ abstract class SoftGardenBasic
 
         // Get the SoftGardenBasic instance.
         if (isset(static::$instance)) {
-            return static::getInstance($clientId);
+            return static::getInstance($clientId, $clientSecret);
         }
 
         // Set the basic uri to the client so the base domain don't have to be set every time.
@@ -79,6 +81,7 @@ abstract class SoftGardenBasic
 
         // Set the client id and create the client instance.
         $this->clientId = $clientId;
+        $this->clientSecret = $clientSecret;
         $this->client = new Client($clientOptions);
         static::$instance = $this;
 
@@ -112,6 +115,33 @@ abstract class SoftGardenBasic
         $this->clientId = $clientId;
     }
 
+        /**
+     * Get the client secret.
+     *
+     * @return string
+     */
+    public function getClientSecret(): string
+    {
+        if (DEBUG) {
+            var_dump(__METHOD__);
+        }
+
+        return $this->clientSecret;
+    }
+
+    /**
+     * Set the client secret.
+     *
+     * @param string $clientSecret
+     */
+    public function setClientSecret(string $clientSecret): void
+    {
+        if (DEBUG) {
+            var_dump(__METHOD__);
+        }
+        $this->clientSecret= $clientSecret;
+    }
+
     /**
      * Execute the request and return the response.
      *
@@ -120,7 +150,7 @@ abstract class SoftGardenBasic
      * @return array The decoded json response as associative array.
      * @throws GuzzleException
      */
-    protected function getResponse(bool $post = false, array $postFields = []): array
+    protected function getResponse(bool $post = false, array $postFields = [], string $uat = ""): array
     {
         $method = $post ? 'POST' : 'GET';
         $options = [
@@ -129,7 +159,7 @@ abstract class SoftGardenBasic
             ],
             'auth' => [
                 $this->clientId,
-                '',
+                $this->clientSecret,
             ],
         ];
 
@@ -139,6 +169,11 @@ abstract class SoftGardenBasic
             } else {
                 $options['query'] = $postFields;
             }
+        }
+
+        if (!empty($uat)) {
+            $options['headers']['Authorization'] = "Bearer ".$uat;
+            unset($options['auth']);
         }
 
         if (DEBUG) {
@@ -171,7 +206,7 @@ abstract class SoftGardenBasic
      * @param string $clientId OPTIONAL. The client id, used for the authentication.
      * @return SoftGardenBasic The SoftGardenBasic instance.
      */
-    public static function getInstance(string $clientId = ''): SoftGardenBasic
+    public static function getInstance(string $clientId = '', string $clientSecret = ''): SoftGardenBasic
     {
         self::checkDebugConstant();
         if (DEBUG) {
@@ -183,10 +218,14 @@ abstract class SoftGardenBasic
                 static::$instance->setClientId($clientId);
             }
 
+            if (!empty($clientSecret)) {
+                static::$instance->setClientSecret($clientSecret);
+            }
+
             return static::$instance;
         }
 
-        static::$instance = new static($clientId);
+        static::$instance = new static($clientId, $clientSecret);
 
         return static::$instance;
     }

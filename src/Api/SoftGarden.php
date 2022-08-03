@@ -273,4 +273,13 @@ class SoftGarden extends SoftGardenBasic
         return $response["access_token"];
     }
 
+    public function hasApplied(string $jobId, string $uat)
+    {
+        $this->uri = sprintf('frontend/jobs/%s/applied', $jobId);
+        $this->version = 3;
+
+        $response = $this->getResponse(false, [], $uat);
+      
+        return $response[0];
+    }
 }
