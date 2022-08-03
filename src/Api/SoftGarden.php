@@ -273,6 +273,11 @@ class SoftGarden extends SoftGardenBasic
         return $response["access_token"];
     }
 
+
+        /**
+        * check if applicant has already applied
+        */
+
     public function hasApplied(string $jobId, string $uat)
     {
         $this->uri = sprintf('frontend/jobs/%s/applied', $jobId);
@@ -282,4 +287,18 @@ class SoftGarden extends SoftGardenBasic
       
         return $response[0];
     }
+
+        /**
+        * start the Application
+        */
+
+        public function startApplication(string $jobId, string $uat)
+        {
+            $this->uri = sprintf('frontend/applications?jobId=%s', $jobId);
+            $this->version = 3;
+    
+            $response = $this->getResponse(true, [], $uat);
+          
+            return $response[0];
+        }
 }
