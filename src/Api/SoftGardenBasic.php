@@ -186,8 +186,8 @@ abstract class SoftGardenBasic
         }
 
         $response = $this->client->request($method, $this->getUrl(), $options);
-
-        return json_decode($response->getBody()->getContents(), true);
+        $decodedResponse = json_decode($response->getBody()->getContents(), true);
+        return is_array($decodedResponse) ? $decodedResponse : [$decodedResponse];
     }
 
     /**
