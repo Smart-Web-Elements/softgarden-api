@@ -249,7 +249,7 @@ abstract class SoftGardenBasic
             $this->version,
             $this->uri,
         ];
-        $template = '%s/%d/%s';
+        $template = '%s/v%d/%s';
 
         if ($this->version === 0) {
             $template = '%s/%s';
