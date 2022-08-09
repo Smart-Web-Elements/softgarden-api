@@ -2,28 +2,64 @@
 
 namespace SWE\SoftGardenApi;
 
+/**
+ *
+ */
 class ApplicantData extends AbstractDataSet
 {
+    /**
+     * @var string
+     */
     protected string $id = '';
 
+    /**
+     * @var string
+     */
     protected string $salutation = '';
 
+    /**
+     * @var string
+     */
     protected string $firstname = '';
 
+    /**
+     * @var string
+     */
     protected string $lastname = '';
 
+    /**
+     * @var string
+     */
     protected string $email = '';
 
+    /**
+     * @var string
+     */
     protected string $workEmail = '';
 
+    /**
+     * @var string
+     */
     protected string $username = '';
 
+    /**
+     * @var string
+     */
     protected string $password = '';
 
+    /**
+     * @var string
+     */
     protected string $locale = 'de';
 
+    /**
+     * @var bool
+     */
     protected bool $internal = true;
 
+    /**
+     * @var bool
+     */
     protected bool $dataPrivacyAccepted = true;
 
     /**
@@ -34,107 +70,172 @@ class ApplicantData extends AbstractDataSet
         return $this->id;
     }
 
-    public function setId(string $id): void
+    /**
+     * @return string
+     */
+    public function getSalutation(): string
     {
-        $this->id = $id;
+        return $this->salutation;
     }
 
-    public function getSalutaion()
-    {
-        return $this->salutaion;
-    }
-
-    public function setSalutaion(string $salutation): void
+    /**
+     * @param string $salutation
+     * @return void
+     */
+    public function setSalutation(string $salutation): void
     {
         $this->salutation = $salutation;
     }
 
-    public function getFirstname()
+    /**
+     * @return string
+     */
+    public function getFirstname(): string
     {
         return $this->firstname;
     }
 
+    /**
+     * @param string $firstname
+     * @return void
+     */
     public function setFirstname(string $firstname): void
     {
         $this->firstname = $firstname;
     }
 
-    public function getLastname()
+    /**
+     * @return string
+     */
+    public function getLastname(): string
     {
         return $this->lastname;
     }
 
+    /**
+     * @param string $lastname
+     * @return void
+     */
     public function setLastname(string $lastname): void
     {
         $this->lastname = $lastname;
     }
 
-    public function getEmail()
+    /**
+     * @return string
+     */
+    public function getEmail(): string
     {
         return $this->email;
     }
 
+    /**
+     * @param string $email
+     * @return void
+     */
     public function setEmail(string $email): void
     {
         $this->email = $email;
     }
 
-    public function getWorkEmail()
+    /**
+     * @return string
+     */
+    public function getWorkEmail(): string
     {
         return $this->workEmail;
     }
 
+    /**
+     * @param string $workEmail
+     * @return void
+     */
     public function setWorkEmail(string $workEmail): void
     {
         $this->workEmail = $workEmail;
     }
 
-    public function getUsername()
+    /**
+     * @return string
+     */
+    public function getUsername(): string
     {
         return $this->username;
     }
 
+    /**
+     * @param string $username
+     * @return void
+     */
     public function setUsername(string $username): void
     {
         $this->username = $username;
     }
 
-    public function getPassword()
+    /**
+     * @return string
+     */
+    public function getPassword(): string
     {
         return $this->password;
     }
 
+    /**
+     * @param string $password
+     * @return void
+     */
     public function setPassword(string $password): void
     {
         $this->password = $password;
     }
 
-    public function getLocale()
+    /**
+     * @return string
+     */
+    public function getLocale(): string
     {
         return $this->locale;
     }
 
+    /**
+     * @param string $locale
+     * @return void
+     */
     public function setLocale(string $locale): void
     {
         $this->locale = $locale;
     }
 
-    public function getinternal()
+    /**
+     * @return bool
+     */
+    public function isInternal(): bool
     {
         return $this->internal;
     }
 
-    public function setInternal(Boolean $internal): void
+    /**
+     * @param bool $internal
+     * @return void
+     */
+    public function setInternal(bool $internal): void
     {
         $this->internal = $internal;
     }
 
-    public function getDataPrivacyAccepted()
+    /**
+     * @return bool
+     */
+    public function isDataPrivacyAccepted(): bool
     {
         return $this->dataPrivacyAccepted;
     }
 
-    public function setDataPrivacyAccepted(Boolean $dataPrivacyAccepted): void
+    /**
+     * @param bool $dataPrivacyAccepted
+     * @return void
+     */
+    public function setDataPrivacyAccepted(bool $dataPrivacyAccepted): void
     {
         $this->dataPrivacyAccepted = $dataPrivacyAccepted;
     }

@@ -33,7 +33,7 @@ class SoftGarden extends SoftGardenBasic
 
     /**
      * Enable the catalogue completion. If disabled, the catalogue values (e.g. "workTimes" in a "Job") will be
-     * shown as id so the user has to grep these informations by himself.
+     * shown as id so the user has to grep these information by himself.
      *
      * @var bool
      */
@@ -251,16 +251,18 @@ class SoftGarden extends SoftGardenBasic
 
     /**
      * Get UAT
+     *
+     * @param ApplicantData $applicant
+     * @return string
      */
-    public function getUserAccessToken(ApplicantData $applicant)
+    public function getUserAccessToken(ApplicantData $applicant): string
     {
-
         $this->uri = 'oauth/frontend/token';
         $this->version = 3;
         $data = [
-            "grant_type"=>"password",
-            "username"=>$applicant->getUsername(),
-            "password"=>$applicant->getPassword(),
+            "grant_type" => "password",
+            "username" => $applicant->getUsername(),
+            "password" => $applicant->getPassword(),
         ];
         try {
             $response = $this->getResponse(true, $data);
@@ -273,32 +275,39 @@ class SoftGarden extends SoftGardenBasic
         return $response["access_token"];
     }
 
-
-        /**
-        * check if applicant has already applied
-        */
-
-    public function hasApplied(string $jobId, string $uat)
+    /**
+     * Check if applicant has already applied
+     *
+     * @param string $jobId
+     * @param string $uat
+     * @return bool
+     * @throws GuzzleException
+     */
+    public function hasApplied(string $jobId, string $uat): bool
     {
         $this->uri = sprintf('frontend/jobs/%s/applied', $jobId);
         $this->version = 3;
 
         $response = $this->getResponse(false, [], $uat);
-      
+
         return $response[0];
     }
 
-        /**
-        * start the Application
-        */
+    /**
+     * Start the application
+     *
+     * @param string $jobId
+     * @param string $uat
+     * @return mixed
+     * @throws GuzzleException
+     */
+    public function startApplication(string $jobId, string $uat)
+    {
+        $this->uri = sprintf('frontend/applications?jobId=%s', $jobId);
+        $this->version = 3;
 
-        public function startApplication(string $jobId, string $uat)
-        {
-            $this->uri = sprintf('frontend/applications?jobId=%s', $jobId);
-            $this->version = 3;
-    
-            $response = $this->getResponse(true, [], $uat);
-          
-            return $response[0];
-        }
+        $response = $this->getResponse(true, [], $uat);
+
+        return $response[0];
+    }
 }

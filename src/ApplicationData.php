@@ -20,10 +20,10 @@ class ApplicationData extends AbstractDataSet
 
     protected string $jobName = '';
 
-    protected string $firstName = '';
+    protected string $firstname = '';
 
-    protected string $lastName = '';
-    
+    protected string $lastname = '';
+
     protected string $sex = '';
 
     protected string $academictitle = '';
@@ -39,7 +39,7 @@ class ApplicationData extends AbstractDataSet
     protected string $zip = '';
 
     protected string $city = '';
-    
+
     protected string $country = '';
 
     protected string $nationality = '';
@@ -55,255 +55,410 @@ class ApplicationData extends AbstractDataSet
     protected string $region = '';
 
     /**
-     * @inheritDoc
+     * @return string
      */
-    public function getApplicationId()
+    public function getApplicationId(): string
     {
         return $this->applicationId;
     }
 
+    /**
+     * @param string $applicationId
+     */
     public function setApplicationId(string $applicationId): void
     {
         $this->applicationId = $applicationId;
     }
 
-    public function getStatus()
+    /**
+     * @return string
+     */
+    public function getStatus(): string
     {
         return $this->status;
     }
 
+    /**
+     * @param string $status
+     */
     public function setStatus(string $status): void
     {
         $this->status = $status;
     }
 
-    public function getApplicationEditable()
+    /**
+     * @return bool
+     */
+    public function isApplicationEditable(): bool
     {
         return $this->applicationEditable;
     }
 
-    public function setApplicationEditable(Boolean $applicationEditable): void
+    /**
+     * @param bool $applicationEditable
+     */
+    public function setApplicationEditable(bool $applicationEditable): void
     {
         $this->applicationEditable = $applicationEditable;
     }
 
-    public function getCreatedOn()
+    /**
+     * @return string
+     */
+    public function getCreatedOn(): string
     {
         return $this->createdOn;
     }
 
+    /**
+     * @param string $createdOn
+     */
     public function setCreatedOn(string $createdOn): void
     {
         $this->createdOn = $createdOn;
     }
 
-    public function getLastChangedOn()
+    /**
+     * @return string
+     */
+    public function getLastChangedOn(): string
     {
         return $this->lastChangedOn;
     }
 
+    /**
+     * @param string $lastChangedOn
+     */
     public function setLastChangedOn(string $lastChangedOn): void
     {
         $this->lastChangedOn = $lastChangedOn;
     }
 
-    public function getSubmittedOn()
+    /**
+     * @return string
+     */
+    public function getSubmittedOn(): string
     {
         return $this->submittedOn;
     }
 
+    /**
+     * @param string $submittedOn
+     */
     public function setSubmittedOn(string $submittedOn): void
     {
         $this->submittedOn = $submittedOn;
     }
 
-    public function getJobId()
+    /**
+     * @return string
+     */
+    public function getJobId(): string
     {
         return $this->jobId;
     }
 
+    /**
+     * @param string $jobId
+     */
     public function setJobId(string $jobId): void
     {
         $this->jobId = $jobId;
     }
 
-    public function getJobName()
+    /**
+     * @return string
+     */
+    public function getJobName(): string
     {
         return $this->jobName;
     }
 
+    /**
+     * @param string $jobName
+     */
     public function setJobName(string $jobName): void
     {
         $this->jobName = $jobName;
     }
 
-    public function getFirstName()
+    /**
+     * @return string
+     */
+    public function getFirstname(): string
     {
-        return $this->firstName;
+        return $this->firstname;
     }
 
-    public function setFirstName(string $firstName): void
+    /**
+     * @param string $firstname
+     */
+    public function setFirstname(string $firstname): void
     {
-        $this->firstName = $firstName;
+        $this->firstname = $firstname;
     }
 
-    public function getLastName()
+    /**
+     * @return string
+     */
+    public function getLastname(): string
     {
-        return $this->lastName;
+        return $this->lastname;
     }
 
-    public function setLastName(string $lastName): void
+    /**
+     * @param string $lastname
+     */
+    public function setLastname(string $lastname): void
     {
-        $this->lastName = $lastName;
+        $this->lastname = $lastname;
     }
 
-    public function getSex()
+    /**
+     * @return string
+     */
+    public function getSex(): string
     {
         return $this->sex;
     }
 
+    /**
+     * @param string $sex
+     */
     public function setSex(string $sex): void
     {
         $this->sex = $sex;
     }
 
-    public function getAcademictitle()
+    /**
+     * @return string
+     */
+    public function getAcademictitle(): string
     {
         return $this->academictitle;
     }
 
+    /**
+     * @param string $academictitle
+     */
     public function setAcademictitle(string $academictitle): void
     {
         $this->academictitle = $academictitle;
     }
 
-    public function getEmail()
+    /**
+     * @return string
+     */
+    public function getEmail(): string
     {
         return $this->email;
     }
 
+    /**
+     * @param string $email
+     */
     public function setEmail(string $email): void
     {
         $this->email = $email;
     }
 
-    public function getExternalProfileUrl()
+    /**
+     * @return string
+     */
+    public function getExternalProfileUrl(): string
     {
         return $this->externalProfileUrl;
     }
 
+    /**
+     * @param string $externalProfileUrl
+     */
     public function setExternalProfileUrl(string $externalProfileUrl): void
     {
         $this->externalProfileUrl = $externalProfileUrl;
     }
 
-    public function getLocale()
+    /**
+     * @return string
+     */
+    public function getLocale(): string
     {
         return $this->locale;
     }
 
+    /**
+     * @param string $locale
+     */
     public function setLocale(string $locale): void
     {
         $this->locale = $locale;
     }
 
-    public function getStreet()
+    /**
+     * @return string
+     */
+    public function getStreet(): string
     {
         return $this->street;
     }
 
+    /**
+     * @param string $street
+     */
     public function setStreet(string $street): void
     {
         $this->street = $street;
     }
 
-    public function getZip()
+    /**
+     * @return string
+     */
+    public function getZip(): string
     {
         return $this->zip;
     }
 
+    /**
+     * @param string $zip
+     */
     public function setZip(string $zip): void
     {
         $this->zip = $zip;
     }
 
-    public function getCity()
+    /**
+     * @return string
+     */
+    public function getCity(): string
     {
         return $this->city;
     }
 
+    /**
+     * @param string $city
+     */
     public function setCity(string $city): void
     {
         $this->city = $city;
     }
 
-    public function getCountry()
+    /**
+     * @return string
+     */
+    public function getCountry(): string
     {
         return $this->country;
     }
 
+    /**
+     * @param string $country
+     */
     public function setCountry(string $country): void
     {
         $this->country = $country;
     }
 
-    public function getNationality()
+    /**
+     * @return string
+     */
+    public function getNationality(): string
     {
         return $this->nationality;
     }
 
+    /**
+     * @param string $nationality
+     */
     public function setNationality(string $nationality): void
     {
         $this->nationality = $nationality;
     }
 
-    public function getPhone()
+    /**
+     * @return string
+     */
+    public function getPhone(): string
     {
         return $this->phone;
     }
 
+    /**
+     * @param string $phone
+     */
     public function setPhone(string $phone): void
     {
         $this->phone = $phone;
     }
 
-    public function getMobilePhone()
+    /**
+     * @return string
+     */
+    public function getMobilePhone(): string
     {
         return $this->mobilePhone;
     }
 
+    /**
+     * @param string $mobilePhone
+     */
     public function setMobilePhone(string $mobilePhone): void
     {
         $this->mobilePhone = $mobilePhone;
     }
 
-    public function getDateofbirth()
+    /**
+     * @return string
+     */
+    public function getDateofbirth(): string
     {
         return $this->dateofbirth;
     }
 
+    /**
+     * @param string $dateofbirth
+     */
     public function setDateofbirth(string $dateofbirth): void
     {
         $this->dateofbirth = $dateofbirth;
     }
 
-    public function getCoverLetterText()
+    /**
+     * @return string
+     */
+    public function getCoverLetterText(): string
     {
         return $this->coverLetterText;
     }
 
+    /**
+     * @param string $coverLetterText
+     */
     public function setCoverLetterText(string $coverLetterText): void
     {
         $this->coverLetterText = $coverLetterText;
     }
 
-    public function getRegion()
+    /**
+     * @return string
+     */
+    public function getRegion(): string
     {
         return $this->region;
     }
 
+    /**
+     * @param string $region
+     */
     public function setRegion(string $region): void
     {
         $this->region = $region;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getId()
+    {
+        return $this->getApplicationId();
     }
 }

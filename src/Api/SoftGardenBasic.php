@@ -47,7 +47,11 @@ abstract class SoftGardenBasic
      * @var string
      */
     protected string $clientId;
-
+    /**
+     * The client secret, used for the authentication.
+     *
+     * @var string
+     */
     protected string $clientSecret;
     /**
      * The Guzzle HTTP Client, used for easy requests.
@@ -60,6 +64,7 @@ abstract class SoftGardenBasic
      * SoftGarden constructor.
      *
      * @param string $clientId OPTIONAL. The client id for the authentication of each request.
+     * @param string $clientSecret OPTIONAL. The client secret for the authentication of each post request.
      */
     public function __construct(string $clientId = '', string $clientSecret = '')
     {
@@ -86,118 +91,6 @@ abstract class SoftGardenBasic
         static::$instance = $this;
 
         return static::$instance;
-    }
-
-    /**
-     * Get the client id.
-     *
-     * @return string
-     */
-    public function getClientId(): string
-    {
-        if (DEBUG) {
-            var_dump(__METHOD__);
-        }
-
-        return $this->clientId;
-    }
-
-    /**
-     * Set the client id.
-     *
-     * @param string $clientId
-     */
-    public function setClientId(string $clientId): void
-    {
-        if (DEBUG) {
-            var_dump(__METHOD__);
-        }
-        $this->clientId = $clientId;
-    }
-
-        /**
-     * Get the client secret.
-     *
-     * @return string
-     */
-    public function getClientSecret(): string
-    {
-        if (DEBUG) {
-            var_dump(__METHOD__);
-        }
-
-        return $this->clientSecret;
-    }
-
-    /**
-     * Set the client secret.
-     *
-     * @param string $clientSecret
-     */
-    public function setClientSecret(string $clientSecret): void
-    {
-        if (DEBUG) {
-            var_dump(__METHOD__);
-        }
-        $this->clientSecret= $clientSecret;
-    }
-
-    /**
-     * Execute the request and return the response.
-     *
-     * @param bool $post OPTIONAL. Use the post method. Defaults to false.
-     * @param array $postFields OPTIONAL. The post arguments that will be sent als query parameters.
-     * @return array The decoded json response as associative array.
-     * @throws GuzzleException
-     */
-    protected function getResponse(bool $post = false, array $postFields = [], string $uat = ""): array
-    {
-        $method = $post ? 'POST' : 'GET';
-        $options = [
-            'headers' => [
-                'Content-Type' => 'application/json',
-            ],
-            'auth' => [
-                $this->clientId,
-                $this->clientSecret,
-            ],
-        ];
-
-        if (!empty($postFields)) {
-            if ($post) {
-                $options['json'] = $postFields;
-            } else {
-                $options['query'] = $postFields;
-            }
-        }
-
-        if (!empty($uat)) {
-            $options['headers']['Authorization'] = "Bearer ".$uat;
-            unset($options['auth']);
-        }
-
-        if (DEBUG) {
-            var_dump(__METHOD__);
-            var_dump('Url: ' . $this->getUrl());
-            var_dump('Method: ' . $method);
-            var_dump(
-                'Options: ' . json_encode($options, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT)
-            );
-        }
-
-        $response = $this->client->request($method, $this->getUrl(), $options);
-        $decodedResponse = json_decode($response->getBody()->getContents(), true);
-        return is_array($decodedResponse) ? $decodedResponse : [$decodedResponse];
-    }
-
-    /**
-     * Get the rest url.
-     *
-     * @return string The rest url built with the domain, version number and the uri, set from the method.
-     */
-    private function getUrl(): string
-    {
-        return sprintf('%s/v%d/%s', static::$domain, $this->version, $this->uri);
     }
 
     /**
@@ -238,5 +131,119 @@ abstract class SoftGardenBasic
         if (!defined('DEBUG')) {
             define('DEBUG', false);
         }
+    }
+
+    /**
+     * Get the client id.
+     *
+     * @return string
+     */
+    public function getClientId(): string
+    {
+        if (DEBUG) {
+            var_dump(__METHOD__);
+        }
+
+        return $this->clientId;
+    }
+
+    /**
+     * Set the client id.
+     *
+     * @param string $clientId
+     */
+    public function setClientId(string $clientId): void
+    {
+        if (DEBUG) {
+            var_dump(__METHOD__);
+        }
+        $this->clientId = $clientId;
+    }
+
+    /**
+     * Get the client secret.
+     *
+     * @return string
+     */
+    public function getClientSecret(): string
+    {
+        if (DEBUG) {
+            var_dump(__METHOD__);
+        }
+
+        return $this->clientSecret;
+    }
+
+    /**
+     * Set the client secret.
+     *
+     * @param string $clientSecret
+     */
+    public function setClientSecret(string $clientSecret): void
+    {
+        if (DEBUG) {
+            var_dump(__METHOD__);
+        }
+        $this->clientSecret = $clientSecret;
+    }
+
+    /**
+     * Execute the request and return the response.
+     *
+     * @param bool $post OPTIONAL. Use the post method. Defaults to false.
+     * @param array $postFields OPTIONAL. The post arguments that will be sent als query parameters.
+     * @param string $uat OPTIONAL. The user access token to do user specific requests.
+     * @return array The decoded json response as associative array.
+     * @throws GuzzleException
+     */
+    protected function getResponse(bool $post = false, array $postFields = [], string $uat = ''): array
+    {
+        $method = $post ? 'POST' : 'GET';
+        $options = [
+            'headers' => [
+                'Content-Type' => 'application/json',
+            ],
+            'auth' => [
+                $this->clientId,
+                $this->clientSecret,
+            ],
+        ];
+
+        if (!empty($postFields)) {
+            if ($post) {
+                $options['json'] = $postFields;
+            } else {
+                $options['query'] = $postFields;
+            }
+        }
+
+        if (!empty($uat)) {
+            $options['headers']['Authorization'] = 'Bearer ' . $uat;
+            unset($options['auth']);
+        }
+
+        if (DEBUG) {
+            var_dump(__METHOD__);
+            var_dump('Url: ' . $this->getUrl());
+            var_dump('Method: ' . $method);
+            var_dump(
+                'Options: ' . json_encode($options, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT)
+            );
+        }
+
+        $response = $this->client->request($method, $this->getUrl(), $options);
+        $decodedResponse = json_decode($response->getBody()->getContents(), true);
+
+        return is_array($decodedResponse) ? $decodedResponse : [$decodedResponse];
+    }
+
+    /**
+     * Get the rest url.
+     *
+     * @return string The rest url built with the domain, version number and the uri, set from the method.
+     */
+    private function getUrl(): string
+    {
+        return sprintf('%s/v%d/%s', static::$domain, $this->version, $this->uri);
     }
 }
