@@ -55,6 +55,25 @@ class SoftGarden extends SoftGardenBasic
             var_dump('Catalogue Key: ' . $typeId);
         }
 
+        $result = $this->getCatalogue($type);
+
+        return $result[$typeId] ?? '';
+    }
+
+    /**
+     * Get a catalogue by type.
+     *
+     * @param string $type The catalogue type
+     * @return array Returns the result.
+     * @throws GuzzleException
+     */
+    public function getCatalogue(string $type): array
+    {
+        if (DEBUG) {
+            var_dump(__METHOD__);
+            var_dump('Catalogue Type: ' . $type);
+        }
+
         $this->uri = sprintf('frontend/catalogs/%s', $type);
         $this->version = 3;
 
@@ -62,9 +81,7 @@ class SoftGarden extends SoftGardenBasic
             'locale' => 'DE',
         ];
 
-        $result = $this->getResponse(false, $queryArguments);
-
-        return $result[$typeId] ?? '';
+        return $this->getResponse(false, $queryArguments);
     }
 
     /**
