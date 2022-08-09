@@ -74,11 +74,6 @@ abstract class SoftGardenBasic
             var_dump(__METHOD__);
         }
 
-        // Get the SoftGardenBasic instance.
-        if (isset(static::$instance)) {
-            return static::getInstance($clientId, $clientSecret);
-        }
-
         // Set the basic uri to the client so the base domain don't have to be set every time.
         $clientOptions = [
             'base_uri' => static::$domain,
@@ -88,6 +83,11 @@ abstract class SoftGardenBasic
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->client = new Client($clientOptions);
+
+        // Get the SoftGardenBasic instance.
+        if (isset(static::$instance)) {
+            return static::getInstance($clientId, $clientSecret);
+        }
         static::$instance = $this;
 
         return static::$instance;
