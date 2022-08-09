@@ -267,6 +267,35 @@ class SoftGarden extends SoftGardenBasic
     }
 
     /**
+     * Check if an applicant exist.
+     *
+     * @param array $data
+     * @return bool
+     * @throws GuzzleException
+     */
+    public function applicantExists(array $data): bool
+    {
+        $applicant = new ApplicantData($data);
+
+        $this->uri = 'frontend/checkUsernameForExistence';
+        $this->version = 2;
+        $fields = [
+            'username' => $applicant->getUsername(),
+        ];
+
+        $response = $this->getResponse(false, $fields);
+
+        if ($response[0] === true) {
+            return true;
+        }
+
+        $this->uri = 'frontend/checkMailForExistence';
+        $response = $this->getResponse(false, $fields);
+
+        return $response[0] === true;
+    }
+
+    /**
      * Get UAT
      *
      * @param ApplicantData $applicant
