@@ -258,11 +258,11 @@ class SoftGarden extends SoftGardenBasic
     public function getUserAccessToken(ApplicantData $applicant): string
     {
         $this->uri = 'oauth/frontend/token';
-        $this->version = 3;
+        $this->version = 0;
         $data = [
-            "grant_type" => "password",
-            "username" => $applicant->getUsername(),
-            "password" => $applicant->getPassword(),
+            'grant_type' => 'password',
+            'username' => $applicant->getUsername(),
+            'password' => $applicant->getPassword(),
         ];
         try {
             $response = $this->getResponse(true, $data);
@@ -272,7 +272,7 @@ class SoftGarden extends SoftGardenBasic
             return trim(array_pop($message));
         }
 
-        return $response["access_token"];
+        return $response['access_token'];
     }
 
     /**
@@ -298,10 +298,10 @@ class SoftGarden extends SoftGardenBasic
      *
      * @param string $jobId
      * @param string $uat
-     * @return mixed
+     * @return string
      * @throws GuzzleException
      */
-    public function startApplication(string $jobId, string $uat)
+    public function startApplication(string $jobId, string $uat): string
     {
         $this->uri = sprintf('frontend/applications?jobId=%s', $jobId);
         $this->version = 3;

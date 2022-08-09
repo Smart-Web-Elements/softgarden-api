@@ -244,6 +244,18 @@ abstract class SoftGardenBasic
      */
     private function getUrl(): string
     {
-        return sprintf('%s/v%d/%s', static::$domain, $this->version, $this->uri);
+        $arguments = [
+            static::$domain,
+            $this->version,
+            $this->uri,
+        ];
+        $template = '%s/%d/%s';
+
+        if ($this->version === 0) {
+            $template = '%s/%s';
+            unset($arguments[1]);
+        }
+
+        return vsprintf($template, $arguments);
     }
 }
