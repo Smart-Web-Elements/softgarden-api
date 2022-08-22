@@ -193,11 +193,16 @@ abstract class SoftGardenBasic
      * @param bool $post OPTIONAL. Use the post method. Defaults to false.
      * @param array $postFields OPTIONAL. The post arguments that will be sent als query parameters.
      * @param string $uat OPTIONAL. The user access token to do user specific requests.
+     * @param bool $json OPTIONAL. The content type should be in json.
      * @return array The decoded json response as associative array.
      * @throws GuzzleException
      */
-    protected function getResponse(bool $post = false, array $postFields = [], string $uat = ''): array
-    {
+    protected function getResponse(
+        bool $post = false,
+        array $postFields = [],
+        string $uat = '',
+        bool $json = true
+    ): array {
         $method = $post ? 'POST' : 'GET';
         $options = [
             'headers' => [
@@ -209,14 +214,22 @@ abstract class SoftGardenBasic
             ],
         ];
 
+        if (!$json) {
+            $options['headers']['Content-Type'] = 'application/x-www-form-urlencoded';
+        }
+
         if (empty($uat) && empty($this->clientSecret) && $post) {
-            $postFields['client_id'] = $this->clientId;
+            $options['headers']['Authorization'] = 'Basic ' . base64_encode($this->clientId);
             unset($options['auth']);
         }
 
         if (!empty($postFields)) {
             if ($post) {
-                $options['json'] = $postFields;
+                if ($json) {
+                    $options['json'] = $postFields;
+                } else {
+                    $options['form_params'] = $postFields;
+                }
             } else {
                 $options['query'] = $postFields;
             }

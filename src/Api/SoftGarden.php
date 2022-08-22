@@ -246,10 +246,10 @@ class SoftGarden extends SoftGardenBasic
      * Create a new applicant.
      *
      * @param array $data
-     * @return string|ApplicantData
+     * @return ApplicantData
      * @throws GuzzleException
      */
-    public function createApplicant(array $data)
+    public function createApplicant(array $data): ApplicantData
     {
         $applicant = new ApplicantData($data);
 
@@ -258,9 +258,9 @@ class SoftGarden extends SoftGardenBasic
         try {
             $this->getResponse(true, $data);
         } catch (GuzzleException $e) {
-            $message = explode(':', $e->getMessage());
-
-            return trim(array_pop($message));
+            echo __LINE__;
+            echo $e->getMessage();
+            exit();
         }
 
         return $applicant;
@@ -300,6 +300,7 @@ class SoftGarden extends SoftGardenBasic
      *
      * @param ApplicantData $applicant
      * @return string
+     * @throws GuzzleException
      */
     public function getUserAccessToken(ApplicantData $applicant): string
     {
@@ -310,13 +311,8 @@ class SoftGarden extends SoftGardenBasic
             'username' => $applicant->getUsername(),
             'password' => $applicant->getPassword(),
         ];
-        try {
-            $response = $this->getResponse(true, $data);
-        } catch (GuzzleException $e) {
-            $message = explode(':', $e->getMessage());
 
-            return trim(array_pop($message));
-        }
+        $response = $this->getResponse(true, $data, '', false);
 
         return $response['access_token'];
     }
