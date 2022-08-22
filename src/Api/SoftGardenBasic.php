@@ -209,6 +209,11 @@ abstract class SoftGardenBasic
             ],
         ];
 
+        if (empty($uat) && empty($this->clientSecret) && $post) {
+            $postFields['client_id'] = $this->clientId;
+            unset($options['auth']);
+        }
+
         if (!empty($postFields)) {
             if ($post) {
                 $options['json'] = $postFields;
