@@ -17,6 +17,18 @@ use GuzzleHttp\Exception\GuzzleException;
  */
 abstract class SoftGardenBasic
 {
+    public const METHOD_GET = 'GET';
+
+    public const METHOD_POST = 'POST';
+
+    public const METHOD_DELETE = 'DELETE';
+
+    public const METHODS = [
+        self::METHOD_GET,
+        self::METHOD_POST,
+        self::METHOD_DELETE,
+    ];
+
     /**
      * The api domain.
      *
@@ -182,20 +194,23 @@ abstract class SoftGardenBasic
     /**
      * Execute the request and return the response.
      *
-     * @param bool $post OPTIONAL. Use the post method. Defaults to false.
+     * @param string $method OPTIONAL. Set the request method. Defaults to METHOD_GET.
      * @param array $postFields OPTIONAL. The post arguments that will be sent als query parameters.
-     * @param string $uat OPTIONAL. The user access token to do user specific requests.
+     * @param string $token OPTIONAL. An access token to do some specific requests.
      * @param bool $json OPTIONAL. The content type should be in json.
      * @return array The decoded json response as associative array.
      * @throws GuzzleException
      */
-    protected function getResponse(
-        bool $post = false,
+    protected function sendResponse(
+        string $method = self::METHOD_GET,
         array $postFields = [],
-        string $uat = '',
+        string $token = '',
         bool $json = true
     ): array {
-        $method = $post ? 'POST' : 'GET';
+        if (!in_array($method, self::METHODS)) {
+            $method = self::METHOD_GET;
+        }
+
         $options = [
             'headers' => [
                 'Content-Type' => 'application/json',
@@ -210,13 +225,13 @@ abstract class SoftGardenBasic
             $options['headers']['Content-Type'] = 'application/x-www-form-urlencoded';
         }
 
-        if (empty($uat) && empty($this->clientSecret) && $post) {
+        if (empty($token) && empty($this->clientSecret) && $method === self::METHOD_POST) {
             $options['headers']['Authorization'] = 'Basic ' . base64_encode($this->clientId);
             unset($options['auth']);
         }
 
         if (!empty($postFields)) {
-            if ($post) {
+            if ($method === self::METHOD_POST) {
                 if ($json) {
                     $options['json'] = $postFields;
                 } else {
@@ -227,8 +242,8 @@ abstract class SoftGardenBasic
             }
         }
 
-        if (!empty($uat)) {
-            $options['headers']['Authorization'] = 'Bearer ' . $uat;
+        if (!empty($token)) {
+            $options['headers']['Authorization'] = 'Bearer ' . $token;
             unset($options['auth']);
         }
 

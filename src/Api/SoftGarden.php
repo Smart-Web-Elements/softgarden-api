@@ -5,6 +5,7 @@ namespace SWE\SoftGardenApi\Api;
 
 use GuzzleHttp\Exception\GuzzleException;
 use SWE\SoftGardenApi\ApplicantData;
+use SWE\SoftGardenApi\ApplicationData;
 use SWE\SoftGardenApi\Channel;
 use SWE\SoftGardenApi\Collection;
 use SWE\SoftGardenApi\Job;
@@ -96,7 +97,7 @@ class SoftGarden extends SoftGardenBasic
             'locale' => 'DE',
         ];
 
-        return $this->getResponse(false, $queryArguments);
+        return $this->sendResponse(self::METHOD_GET, $queryArguments);
     }
 
     /**
@@ -114,7 +115,7 @@ class SoftGarden extends SoftGardenBasic
         $this->uri = 'frontend/jobslist/channels';
         $this->version = 3;
 
-        return new Collection($this->getResponse(), Channel::class, $this->useAutomaticCatalogueCompletion);
+        return new Collection($this->sendResponse(), Channel::class, $this->useAutomaticCatalogueCompletion);
     }
 
     /**
@@ -136,7 +137,7 @@ class SoftGarden extends SoftGardenBasic
         $this->uri = sprintf('frontend/jobslist/%s/job/%d', $channelId, $jobId);
         $this->version = 3;
 
-        return new Job($this->getResponse(), '', $this->useAutomaticCatalogueCompletion);
+        return new Job($this->sendResponse(), '', $this->useAutomaticCatalogueCompletion);
     }
 
     /**
@@ -161,7 +162,7 @@ class SoftGarden extends SoftGardenBasic
         ];
 
         return new JobSearchResult(
-            $this->getResponse(false, $queryArguments), '', $this->useAutomaticCatalogueCompletion
+            $this->sendResponse(self::METHOD_GET, $queryArguments), '', $this->useAutomaticCatalogueCompletion
         );
     }
 
@@ -182,7 +183,7 @@ class SoftGarden extends SoftGardenBasic
         $this->uri = sprintf('frontend/jobs/%d/questions', $jobId);
         $this->version = 3;
 
-        return new Collection($this->getResponse(), JobQuestion::class, $this->useAutomaticCatalogueCompletion);
+        return new Collection($this->sendResponse(), JobQuestion::class, $this->useAutomaticCatalogueCompletion);
     }
 
     /**
@@ -201,7 +202,7 @@ class SoftGarden extends SoftGardenBasic
 
         $this->uri = sprintf('frontend/jobslist/%s', $channelId);
         $this->version = 3;
-        $response = $this->getResponse();
+        $response = $this->sendResponse();
 
         return new Collection($response['results'], Job::class, $this->useAutomaticCatalogueCompletion);
     }
@@ -249,7 +250,7 @@ class SoftGarden extends SoftGardenBasic
         }
 
         return new JobSearchResult(
-            $this->getResponse(false, $queryArguments), '', $this->useAutomaticCatalogueCompletion
+            $this->sendResponse(self::METHOD_GET, $queryArguments), '', $this->useAutomaticCatalogueCompletion
         );
     }
 
@@ -267,7 +268,7 @@ class SoftGarden extends SoftGardenBasic
         $this->uri = 'frontend/applicants';
         $this->version = 3;
         try {
-            $this->getResponse(true, $data);
+            $this->sendResponse(self::METHOD_POST, $data);
         } catch (GuzzleException $e) {
             echo __LINE__;
             echo $e->getMessage();
@@ -294,14 +295,14 @@ class SoftGarden extends SoftGardenBasic
             'username' => $applicant->getUsername(),
         ];
 
-        $response = $this->getResponse(false, $fields);
+        $response = $this->sendResponse(self::METHOD_GET, $fields);
 
         if ($response[0] === true) {
             return true;
         }
 
         $this->uri = 'frontend/checkMailForExistence';
-        $response = $this->getResponse(false, $fields);
+        $response = $this->sendResponse(self::METHOD_GET, $fields);
 
         return $response[0] === true;
     }
@@ -323,7 +324,7 @@ class SoftGarden extends SoftGardenBasic
             'password' => $applicant->getPassword(),
         ];
 
-        $response = $this->getResponse(true, $data, '', false);
+        $response = $this->sendResponse(self::METHOD_POST, $data, '', false);
 
         return $response['access_token'];
     }
@@ -341,9 +342,41 @@ class SoftGarden extends SoftGardenBasic
         $this->uri = sprintf('frontend/jobs/%s/applied', $jobId);
         $this->version = 3;
 
-        $response = $this->getResponse(false, [], $uat);
+        $response = $this->sendResponse(self::METHOD_GET, [], $uat);
 
         return $response[0];
+    }
+
+    /**
+     * Get all applications of an applicant.
+     *
+     * @param string $uat The user access token.
+     * @param array $queryParameters OPTIONAL. The query parameters.
+     * @return Collection Returns a collection of ApplicationData instances.
+     * @throws GuzzleException
+     */
+    public function getAllApplications(string $uat, array $queryParameters = []): Collection
+    {
+        $this->uri = 'frontend/applications';
+        $this->version = 3;
+
+        return new Collection($this->sendResponse(self::METHOD_GET, $queryParameters, $uat), ApplicationData::class, $this->useAutomaticCatalogueCompletion);
+    }
+
+    /**
+     * Get an application of an applicant.
+     *
+     * @param string $applicationId The application id.
+     * @param string $uat The user access token.
+     * @return ApplicationData Returns an ApplicationData instance.
+     * @throws GuzzleException
+     */
+    public function getApplication(string $applicationId, string $uat): ApplicationData
+    {
+        $this->uri = sprintf('frontend/applications/%s', $applicationId);
+        $this->version = 3;
+
+        return new ApplicationData($this->sendResponse(self::METHOD_GET, [], $uat), '', $this->useAutomaticCatalogueCompletion);
     }
 
     /**
@@ -359,7 +392,7 @@ class SoftGarden extends SoftGardenBasic
         $this->uri = sprintf('frontend/applications?jobId=%s', $jobId);
         $this->version = 3;
 
-        $response = $this->getResponse(true, [], $uat);
+        $response = $this->sendResponse(self::METHOD_POST, [], $uat);
 
         return $response[0];
     }
@@ -378,7 +411,7 @@ class SoftGarden extends SoftGardenBasic
         $this->uri = sprintf('frontend/applications/%s', $applicationId);
         $this->version = 3;
 
-        $this->getResponse(true, $applicationData, $uat);
+        $this->sendResponse(self::METHOD_POST, $applicationData, $uat);
     }
 
     /**
@@ -395,6 +428,38 @@ class SoftGarden extends SoftGardenBasic
         $this->uri = sprintf('frontend/applications/%s/submit', $applicationId);
         $this->version = 3;
 
-        $this->getResponse('true', $applicant->toArray(), $uat);
+        $this->sendResponse(self::METHOD_POST, $applicant->toArray(), $uat);
+    }
+
+    /**
+     * Delete an application if it's not finalized.
+     *
+     * @param string $applicationId The application id.
+     * @param string $uat The user access token.
+     * @return void
+     * @throws GuzzleException
+     */
+    public function deleteApplication(string $applicationId, string $uat): void
+    {
+        $this->uri = sprintf('frontend/applications/%s', $applicationId);
+        $this->version = 3;
+
+        $this->sendResponse(self::METHOD_DELETE, [], $uat, false);
+    }
+
+    /**
+     * Withdraw a finalized (submitted) application.
+     *
+     * @param string $applicationId The application id.
+     * @param string $uat The user access token.
+     * @return void
+     * @throws GuzzleException
+     */
+    public function withdrawApplication(string $applicationId, string $uat): void
+    {
+        $this->uri = sprintf('frontend/applications/%s/withdraw', $applicationId);
+        $this->version = 3;
+
+        $this->sendResponse(self::METHOD_POST, [], $uat, false);
     }
 }
