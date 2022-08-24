@@ -1,5 +1,9 @@
 # SoftGarden API
 
+## SoftGarden API v1.2.1
+
+- Fixed Singleton
+
 ## SoftGarden API v1.2.0
 
 - Optimized some code
