@@ -1,6 +1,6 @@
 # SoftGarden API
 
-## SoftGarden API v1.1.2
+## SoftGarden API v1.2.0
 
 - Optimized some code
 - Added missing `@throw` in PhpDocs
