@@ -1,5 +1,9 @@
 # SoftGarden API
 
+## SoftGarden API v1.2.3
+
+- Added method to store application data and finalize it
+
 ## SoftGarden API v1.2.2
 
 - Just a commit to fix a confusing bug with packagist.org
