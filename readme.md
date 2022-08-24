@@ -1,68 +1,196 @@
 # SoftGarden API
 
+[![Packagist Downloads](https://img.shields.io/packagist/dt/swe/softgarden-api)](https://packagist.org/packages/swe/softgarden-api)
+[![Packagist Version](https://img.shields.io/packagist/v/swe/softgarden-api)](https://packagist.org/packages/swe/softgarden-api)
+[![License](https://img.shields.io/packagist/l/swe/softgarden-api)](https://packagist.org/packages/swe/softgarden-api)
+[![PHP Version](https://img.shields.io/packagist/php-v/swe/softgarden-api)](https://packagist.org/packages/swe/softgarden-api)
+
 This is an API to simplify your connection to SoftGarden. The class `\SWE\SoftGardenApi\Api\SoftGarden` contains some
-methods to get some specific data.
+methods to get and post some specific data.
 
 ## Methods
 
-__getChannels(): Collection__
-
-Returns a `Collection` with `Channel`-instances.
-
-__getJobs(string $channelId): Collection__
-
-Returns a `Collection` with `Job`-instances.
-
-__getJob(string $channelId, int $jobId): Job__
-
-Returns a `Job`-instance.
-
-__getJobQuestions(int $jobId): Collection__
-
-Returns a `Collection` with `JobQuestion`-instances.
-
-## Examples
-
 ```php
-use SWE\SoftGardenApi\Api\SoftGarden;
+/**
+ * Get a catalogue value by type.
+ *
+ * @param string $type The catalogue type.
+ * @param string $typeId The id of the catalogue.
+ * @return string Returns the result as string.
+ * @throws GuzzleException
+ */
+public function getCatalogByType(string $type, string $typeId): string;
 
-// TODO: Paste in your client id.
-$clientId = '';
-$softGarden = new SoftGarden();
-$softGarden->setClientId($clientId);
+/**
+ * Get a catalogue by type.
+ *
+ * @param string $type The catalogue type
+ * @return array Returns the result.
+ * @throws GuzzleException
+ */
+public function getCatalogue(string $type): array;
 
-// OR
-$softGarden = new SoftGarden($clientId);
+/**
+ * Get all channels.
+ *
+ * @return Collection A collection with all channels.
+ * @throws GuzzleException
+ */
+public function getChannels(): Collection;
 
-// Get all channels.
-$channels = $softGarden->getChannels();
+/**
+ * Get a job by id.
+ *
+ * @param string $channelId The channel id.
+ * @param int $jobId The job id.
+ * @return Job The job instance.
+ * @throws GuzzleException
+ */
+public function getJob(string $channelId, int $jobId): Job;
 
-// Get the first channel.
-$channel = $channels->getItem(0);
+/**
+ * Get the job basket.
+ *
+ * @param string $channelId The channel id.
+ * @return JobSearchResult The JobSearchResult instance.
+ * @throws GuzzleException
+ */
+public function getJobBasket(string $channelId): JobSearchResult;
 
-// Get the basket of a channel.
-$basket = $softGarden->getJobBasket($channel->getId());
+/**
+ * Get all job questions of a job.
+ *
+ * @param int $jobId The job id.
+ * @return Collection A collection with all questions of the job.
+ * @throws GuzzleException
+ */
+public function getJobQuestions(int $jobId): Collection;
 
-// Get all jobs of a channel.
-$jobs = $softGarden->getJobs($channel->getId());
+/**
+ * Get all jobs of a channel.
+ *
+ * @param string $channelId The channel id.
+ * @return Collection A collection with all jobs of the channel.
+ * @throws GuzzleException
+ */
+public function getJobs(string $channelId): Collection;
 
-// Get iterate through jobs of a channel.
-$jobs = $softGarden->getJobs($channel->getId());
+/**
+ * @return bool
+ */
+public function isUseAutomaticCatalogueCompletion(): bool;
 
-// Get the first job.
-$job = $jobs->getItem(0);
+/**
+ * @param bool $useAutomaticCatalogueCompletion
+ */
+public function setUseAutomaticCatalogueCompletion(bool $useAutomaticCatalogueCompletion): void;
 
-// Get the job with the id xy
-$myJob = $softGarden->getJob($channel->getId(), $job->getId());
+/**
+ * Search for a job in a channel.
+ *
+ * @param string $channelId The channel id.
+ * @param string $search OPTIONAL. The word we are searching for.
+ * @param string $geoLocation OPTIONAL. The geolocation we are searching for.
+ * @return JobSearchResult The JobSearchResult instance.
+ * @throws GuzzleException
+ */
+public function searchForJob(string $channelId, string $search = '', string $geoLocation = ''): JobSearchResult;
 
-// Get all questions of a job.
-$questions = $softGarden->getJobQuestions($job->getId());
+/**
+ * Create a new applicant.
+ *
+ * @param array $data The applicant data.
+ * @return ApplicantData The ApplicantData instance.
+ * @throws GuzzleException
+ */
+public function createApplicant(array $data): ApplicantData;
 
-// It is possible to get the result as array instead of objects:
-$channelArray = $channels->toArray();
+/**
+ * Check if an applicant exist.
+ *
+ * @param array $data The applicant data.
+ * @return bool Returns true if applicant exists.
+ * @throws GuzzleException
+ */
+public function applicantExists(array $data): bool;
+
+/**
+ * Get the user access token for an applicant.
+ *
+ * @param ApplicantData $applicant The applicant instance.
+ * @return string The user access token of the applicant.
+ * @throws GuzzleException
+ */
+public function getUserAccessToken(ApplicantData $applicant): string;
+
+/**
+ * Check if applicant has already applied to a job.
+ *
+ * @param string $jobId The job id where the applicant want to apply to.
+ * @param string $uat The user access token of the applicant.
+ * @return bool Returns true if the applicant has already applied to this job.
+ * @throws GuzzleException
+ */
+public function hasApplied(string $jobId, string $uat): bool;
+
+/**
+ * Start the application.
+ *
+ * @param string $jobId The job id where the applicant want to apply to.
+ * @param string $uat The user access token of the applicant.
+ * @return string Returns the application id.
+ * @throws GuzzleException
+ */
+public function startApplication(string $jobId, string $uat): string;
 ```
 
 ## Return values
+
+__ApplicantData__
+
+| Variable            | Type    | Default |
+|---------------------|---------|--------:|
+| id                  | string  |      '' |
+| salutation          | string  |      '' |
+| firstname           | string  |      '' |
+| lastname            | string  |      '' |
+| email               | string  |      '' |
+| workEmail           | string  |      '' |
+| username            | string  |      '' |
+| password            | string  |      '' |
+| locale              | string  |    'de' |
+| internal            | boolean |    true |
+| dataPrivacyAccepted | boolean |    true |
+
+__ApplicationData__
+
+| Variable            | Type    | Default |
+|---------------------|---------|--------:|
+| applicationId       | string  |      '' |
+| status              | string  |      '' |
+| applicationEditable | boolean |   false |
+| createdOn           | string  |      '' |
+| lastChangedOn       | string  |      '' |
+| submittedOn         | string  |      '' |
+| jobId               | string  |      '' |
+| jobName             | string  |      '' |
+| firstname           | string  |      '' |
+| lastname            | string  |      '' |
+| sex                 | string  |      '' |
+| academictitle       | string  |      '' |
+| email               | string  |      '' |
+| externalProfileUrl  | string  |      '' |
+| locale              | string  |    'de' |
+| street              | string  |      '' |
+| zip                 | string  |      '' |
+| city                | string  |      '' |
+| country             | string  |      '' |
+| nationality         | string  |      '' |
+| phone               | string  |      '' |
+| mobilePhone         | string  |      '' |
+| dateofbirth         | string  |      '' |
+| coverLetterText     | string  |      '' |
+| region              | string  |      '' |
 
 __Channel__
 

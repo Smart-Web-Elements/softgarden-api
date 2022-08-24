@@ -4,6 +4,7 @@ namespace SWE\SoftGardenApi\Api;
 
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * Class SoftGardenBasic
@@ -47,6 +48,12 @@ abstract class SoftGardenBasic
      */
     protected string $clientId;
     /**
+     * The client secret, used for the authentication.
+     *
+     * @var string
+     */
+    protected string $clientSecret;
+    /**
      * The Guzzle HTTP Client, used for easy requests.
      *
      * @var Client
@@ -57,18 +64,14 @@ abstract class SoftGardenBasic
      * SoftGarden constructor.
      *
      * @param string $clientId OPTIONAL. The client id for the authentication of each request.
+     * @param string $clientSecret OPTIONAL. The client secret for the authentication of each post request.
      */
-    public function __construct(string $clientId = '')
+    public function __construct(string $clientId = '', string $clientSecret = '')
     {
         // Check if the DEBUG constant is set.
         self::checkDebugConstant();
         if (DEBUG) {
             var_dump(__METHOD__);
-        }
-
-        // Get the SoftGardenBasic instance.
-        if (isset(static::$instance)) {
-            return static::getInstance($clientId);
         }
 
         // Set the basic uri to the client so the base domain don't have to be set every time.
@@ -78,10 +81,56 @@ abstract class SoftGardenBasic
 
         // Set the client id and create the client instance.
         $this->clientId = $clientId;
+        $this->clientSecret = $clientSecret;
         $this->client = new Client($clientOptions);
+
+        // Get the SoftGardenBasic instance.
+        if (isset(static::$instance)) {
+            return static::getInstance($clientId, $clientSecret);
+        }
         static::$instance = $this;
 
         return static::$instance;
+    }
+
+    /**
+     * Get the SoftGardenBasic instance.
+     *
+     * @param string $clientId OPTIONAL. The client id, used for the authentication.
+     * @return SoftGardenBasic The SoftGardenBasic instance.
+     */
+    public static function getInstance(string $clientId = '', string $clientSecret = ''): SoftGardenBasic
+    {
+        self::checkDebugConstant();
+        if (DEBUG) {
+            var_dump(__METHOD__);
+        }
+
+        if (static::$instance) {
+            if (!empty($clientId)) {
+                static::$instance->setClientId($clientId);
+            }
+
+            if (!empty($clientSecret)) {
+                static::$instance->setClientSecret($clientSecret);
+            }
+
+            return static::$instance;
+        }
+
+        static::$instance = new static($clientId, $clientSecret);
+
+        return static::$instance;
+    }
+
+    /**
+     * Check if the DEBUG constant is defined. If not, define the constant to false.
+     */
+    private static function checkDebugConstant(): void
+    {
+        if (!defined('DEBUG')) {
+            define('DEBUG', false);
+        }
     }
 
     /**
@@ -112,14 +161,48 @@ abstract class SoftGardenBasic
     }
 
     /**
+     * Get the client secret.
+     *
+     * @return string
+     */
+    public function getClientSecret(): string
+    {
+        if (DEBUG) {
+            var_dump(__METHOD__);
+        }
+
+        return $this->clientSecret;
+    }
+
+    /**
+     * Set the client secret.
+     *
+     * @param string $clientSecret
+     */
+    public function setClientSecret(string $clientSecret): void
+    {
+        if (DEBUG) {
+            var_dump(__METHOD__);
+        }
+        $this->clientSecret = $clientSecret;
+    }
+
+    /**
      * Execute the request and return the response.
      *
      * @param bool $post OPTIONAL. Use the post method. Defaults to false.
      * @param array $postFields OPTIONAL. The post arguments that will be sent als query parameters.
+     * @param string $uat OPTIONAL. The user access token to do user specific requests.
+     * @param bool $json OPTIONAL. The content type should be in json.
      * @return array The decoded json response as associative array.
+     * @throws GuzzleException
      */
-    protected function getResponse(bool $post = false, array $postFields = []): array
-    {
+    protected function getResponse(
+        bool $post = false,
+        array $postFields = [],
+        string $uat = '',
+        bool $json = true
+    ): array {
         $method = $post ? 'POST' : 'GET';
         $options = [
             'headers' => [
@@ -127,12 +210,34 @@ abstract class SoftGardenBasic
             ],
             'auth' => [
                 $this->clientId,
-                '',
+                $this->clientSecret,
             ],
         ];
 
+        if (!$json) {
+            $options['headers']['Content-Type'] = 'application/x-www-form-urlencoded';
+        }
+
+        if (empty($uat) && empty($this->clientSecret) && $post) {
+            $options['headers']['Authorization'] = 'Basic ' . base64_encode($this->clientId);
+            unset($options['auth']);
+        }
+
         if (!empty($postFields)) {
-            $options['query'] = $postFields;
+            if ($post) {
+                if ($json) {
+                    $options['json'] = $postFields;
+                } else {
+                    $options['form_params'] = $postFields;
+                }
+            } else {
+                $options['query'] = $postFields;
+            }
+        }
+
+        if (!empty($uat)) {
+            $options['headers']['Authorization'] = 'Bearer ' . $uat;
+            unset($options['auth']);
         }
 
         if (DEBUG) {
@@ -145,8 +250,9 @@ abstract class SoftGardenBasic
         }
 
         $response = $this->client->request($method, $this->getUrl(), $options);
+        $decodedResponse = json_decode($response->getBody()->getContents(), true);
 
-        return json_decode($response->getBody()->getContents(), true);
+        return is_array($decodedResponse) ? $decodedResponse : [$decodedResponse];
     }
 
     /**
@@ -156,42 +262,18 @@ abstract class SoftGardenBasic
      */
     private function getUrl(): string
     {
-        return sprintf('%s/v%d/%s', static::$domain, $this->version, $this->uri);
-    }
+        $arguments = [
+            static::$domain,
+            $this->version,
+            $this->uri,
+        ];
+        $template = '%s/v%d/%s';
 
-    /**
-     * Get the SoftGardenBasic instance.
-     *
-     * @param string $clientId OPTIONAL. The client id, used for the authentication.
-     * @return SoftGardenBasic The SoftGardenBasic instance.
-     */
-    public static function getInstance(string $clientId = ''): SoftGardenBasic
-    {
-        self::checkDebugConstant();
-        if (DEBUG) {
-            var_dump(__METHOD__);
+        if ($this->version === 0) {
+            $template = '%s/%s';
+            unset($arguments[1]);
         }
 
-        if (static::$instance) {
-            if (!empty($clientId)) {
-                static::$instance->setClientId($clientId);
-            }
-
-            return static::$instance;
-        }
-
-        static::$instance = new static($clientId);
-
-        return static::$instance;
-    }
-
-    /**
-     * Check if the DEBUG constant is defined. If not, define the constant to false.
-     */
-    private static function checkDebugConstant(): void
-    {
-        if (!defined('DEBUG')) {
-            define('DEBUG', false);
-        }
+        return vsprintf($template, $arguments);
     }
 }

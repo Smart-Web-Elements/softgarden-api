@@ -99,7 +99,7 @@ class Collection extends AbstractDataSet implements IteratorAggregate
 
         $dataSet = $this->items[$index];
 
-        if (!$dataSet instanceof AbstractDataSet || empty($dataSet->getId()) || $dataSet->getId() === 0) {
+        if (empty($dataSet->getId()) || $dataSet->getId() === 0) {
             return null;
         }
 

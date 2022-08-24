@@ -3,6 +3,7 @@
 namespace SWE\SoftGardenApi;
 
 
+use GuzzleHttp\Exception\GuzzleException;
 use SWE\SoftGardenApi\Api\SoftGarden;
 
 /**
@@ -27,6 +28,7 @@ abstract class AbstractDataSet
      * @param array $arguments OPTIONAL. The arguments of the Model.
      * @param string $FQN OPTIONAL. The full qualified class name of the Model.
      * @param bool $automation OPTIONAL. The catalogue fields should be set automatically.
+     * @throws GuzzleException
      */
     public function __construct(array $arguments = [], string $FQN = '', bool $automation = false)
     {
@@ -63,10 +65,7 @@ abstract class AbstractDataSet
         $objectVars = get_object_vars($this);
 
         foreach (get_class_vars(static::class) as $key => $value) {
-            if (array_key_exists($key, $objectVars) && $value === null) {
-                $value = $objectVars[$key];
-            }
-            if (array_key_exists($key, $objectVars) && $value !== $objectVars[$key]) {
+            if (array_key_exists($key, $objectVars) && ($value === null || $value !== $objectVars[$key])) {
                 $value = $objectVars[$key];
             }
 
@@ -112,6 +111,7 @@ abstract class AbstractDataSet
      *
      * @param string $key The catalogue field name.
      * @return array An array of catalogue values.
+     * @throws GuzzleException
      */
     private function setByCatalogue(string $key): array
     {

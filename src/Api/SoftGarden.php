@@ -3,6 +3,8 @@
 namespace SWE\SoftGardenApi\Api;
 
 
+use GuzzleHttp\Exception\GuzzleException;
+use SWE\SoftGardenApi\ApplicantData;
 use SWE\SoftGardenApi\Channel;
 use SWE\SoftGardenApi\Collection;
 use SWE\SoftGardenApi\Job;
@@ -31,7 +33,7 @@ class SoftGarden extends SoftGardenBasic
 
     /**
      * Enable the catalogue completion. If disabled, the catalogue values (e.g. "workTimes" in a "Job") will be
-     * shown as id so the user has to grep these informations by himself.
+     * shown as id so the user has to grep these information by himself.
      *
      * @var bool
      */
@@ -43,6 +45,7 @@ class SoftGarden extends SoftGardenBasic
      * @param string $type The catalogue type.
      * @param string $typeId The id of the catalogue.
      * @return string Returns the result as string.
+     * @throws GuzzleException
      */
     public function getCatalogByType(string $type, string $typeId): string
     {
@@ -52,6 +55,25 @@ class SoftGarden extends SoftGardenBasic
             var_dump('Catalogue Key: ' . $typeId);
         }
 
+        $result = $this->getCatalogue($type);
+
+        return $result[$typeId] ?? '';
+    }
+
+    /**
+     * Get a catalogue by type.
+     *
+     * @param string $type The catalogue type
+     * @return array Returns the result.
+     * @throws GuzzleException
+     */
+    public function getCatalogue(string $type): array
+    {
+        if (DEBUG) {
+            var_dump(__METHOD__);
+            var_dump('Catalogue Type: ' . $type);
+        }
+
         $this->uri = sprintf('frontend/catalogs/%s', $type);
         $this->version = 3;
 
@@ -59,15 +81,14 @@ class SoftGarden extends SoftGardenBasic
             'locale' => 'DE',
         ];
 
-        $result = $this->getResponse(false, $queryArguments);
-
-        return $result[$typeId] ?? '';
+        return $this->getResponse(false, $queryArguments);
     }
 
     /**
      * Get all channels.
      *
      * @return Collection A collection with all channels.
+     * @throws GuzzleException
      */
     public function getChannels(): Collection
     {
@@ -87,6 +108,7 @@ class SoftGarden extends SoftGardenBasic
      * @param string $channelId The channel id.
      * @param int $jobId The job id.
      * @return Job The job instance.
+     * @throws GuzzleException
      */
     public function getJob(string $channelId, int $jobId): Job
     {
@@ -107,6 +129,7 @@ class SoftGarden extends SoftGardenBasic
      *
      * @param string $channelId The channel id.
      * @return JobSearchResult The JobSearchResult instance.
+     * @throws GuzzleException
      */
     public function getJobBasket(string $channelId): JobSearchResult
     {
@@ -123,9 +146,7 @@ class SoftGarden extends SoftGardenBasic
         ];
 
         return new JobSearchResult(
-            $this->getResponse(false, $queryArguments),
-            '',
-            $this->useAutomaticCatalogueCompletion
+            $this->getResponse(false, $queryArguments), '', $this->useAutomaticCatalogueCompletion
         );
     }
 
@@ -134,6 +155,7 @@ class SoftGarden extends SoftGardenBasic
      *
      * @param int $jobId The job id.
      * @return Collection A collection with all questions of the job.
+     * @throws GuzzleException
      */
     public function getJobQuestions(int $jobId): Collection
     {
@@ -153,6 +175,7 @@ class SoftGarden extends SoftGardenBasic
      *
      * @param string $channelId The channel id.
      * @return Collection A collection with all jobs of the channel.
+     * @throws GuzzleException
      */
     public function getJobs(string $channelId): Collection
     {
@@ -191,6 +214,7 @@ class SoftGarden extends SoftGardenBasic
      * @param string $search OPTIONAL. The word we are searching for.
      * @param string $geoLocation OPTIONAL. The geolocation we are searching for.
      * @return JobSearchResult The JobSearchResult instance.
+     * @throws GuzzleException
      */
     public function searchForJob(string $channelId, string $search = '', string $geoLocation = ''): JobSearchResult
     {
@@ -210,9 +234,118 @@ class SoftGarden extends SoftGardenBasic
         }
 
         return new JobSearchResult(
-            $this->getResponse(false, $queryArguments),
-            '',
-            $this->useAutomaticCatalogueCompletion
+            $this->getResponse(false, $queryArguments), '', $this->useAutomaticCatalogueCompletion
         );
+    }
+
+    /**
+     * Create a new applicant.
+     *
+     * @param array $data The applicant data.
+     * @return ApplicantData The ApplicantData instance.
+     * @throws GuzzleException
+     */
+    public function createApplicant(array $data): ApplicantData
+    {
+        $applicant = new ApplicantData($data);
+
+        $this->uri = 'frontend/applicants';
+        $this->version = 3;
+        try {
+            $this->getResponse(true, $data);
+        } catch (GuzzleException $e) {
+            echo __LINE__;
+            echo $e->getMessage();
+            exit();
+        }
+
+        return $applicant;
+    }
+
+    /**
+     * Check if an applicant exist.
+     *
+     * @param array $data The applicant data.
+     * @return bool Returns true if applicant exists.
+     * @throws GuzzleException
+     */
+    public function applicantExists(array $data): bool
+    {
+        $applicant = new ApplicantData($data);
+
+        $this->uri = 'frontend/checkUsernameForExistence';
+        $this->version = 2;
+        $fields = [
+            'username' => $applicant->getUsername(),
+        ];
+
+        $response = $this->getResponse(false, $fields);
+
+        if ($response[0] === true) {
+            return true;
+        }
+
+        $this->uri = 'frontend/checkMailForExistence';
+        $response = $this->getResponse(false, $fields);
+
+        return $response[0] === true;
+    }
+
+    /**
+     * Get the user access token for an applicant.
+     *
+     * @param ApplicantData $applicant The applicant instance.
+     * @return string The user access token of the applicant.
+     * @throws GuzzleException
+     */
+    public function getUserAccessToken(ApplicantData $applicant): string
+    {
+        $this->uri = 'oauth/frontend/token';
+        $this->version = 0;
+        $data = [
+            'grant_type' => 'password',
+            'username' => $applicant->getUsername(),
+            'password' => $applicant->getPassword(),
+        ];
+
+        $response = $this->getResponse(true, $data, '', false);
+
+        return $response['access_token'];
+    }
+
+    /**
+     * Check if applicant has already applied to a job.
+     *
+     * @param string $jobId The job id where the applicant want to apply to.
+     * @param string $uat The user access token of the applicant.
+     * @return bool Returns true if the applicant has already applied to this job.
+     * @throws GuzzleException
+     */
+    public function hasApplied(string $jobId, string $uat): bool
+    {
+        $this->uri = sprintf('frontend/jobs/%s/applied', $jobId);
+        $this->version = 3;
+
+        $response = $this->getResponse(false, [], $uat);
+
+        return $response[0];
+    }
+
+    /**
+     * Start the application.
+     *
+     * @param string $jobId The job id where the applicant want to apply to.
+     * @param string $uat The user access token of the applicant.
+     * @return string Returns the application id.
+     * @throws GuzzleException
+     */
+    public function startApplication(string $jobId, string $uat): string
+    {
+        $this->uri = sprintf('frontend/applications?jobId=%s', $jobId);
+        $this->version = 3;
+
+        $response = $this->getResponse(true, [], $uat);
+
+        return $response[0];
     }
 }

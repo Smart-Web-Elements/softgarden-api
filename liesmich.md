@@ -1,174 +1,305 @@
 # SoftGarden API
 
+[![Packagist Downloads](https://img.shields.io/packagist/dt/swe/softgarden-api)](https://packagist.org/packages/swe/softgarden-api)
+[![Packagist Version](https://img.shields.io/packagist/v/swe/softgarden-api)](https://packagist.org/packages/swe/softgarden-api)
+[![License](https://img.shields.io/packagist/l/swe/softgarden-api)](https://packagist.org/packages/swe/softgarden-api)
+[![PHP Version](https://img.shields.io/packagist/php-v/swe/softgarden-api)](https://packagist.org/packages/swe/softgarden-api)
+
 Die SoftGarden API ist eine Schnittstelle, welche eine Verbindung zu SoftGarden erleichtert. In der
-Klasse `\SWE\SoftGardenApi\Api\SoftGarden` sind einige Methoden zum Abrufen bestimmter Daten enthalten.
+Klasse `\SWE\SoftGardenApi\Api\SoftGarden` sind einige Methoden zum Abrufen und Erstellen bestimmter Daten enthalten.
 
 ## Methoden
 
-__getChannels(): Collection__
-
-Gibt eine `Collection` mit `Channel`-Instanzen zurück.
-
-__getJobs(string $channelId): Collection__
-
-Gibt eine `Collection` mit `Job`-Instanzen zurück.
-
-__getJob(string $channelId, int $jobId): Job__
-
-Gibt eine `Job`-Instanz zurück.
-
-__getJobQuestions(int $jobId): Collection__
-
-Gibt eine `Collection` mit `JobQuestion`-Instanzen zurück.
-
-## Beispiele
-
 ```php
-use SWE\SoftGardenApi\Api\SoftGarden;
+/**
+ * Get a catalogue value by type.
+ *
+ * @param string $type The catalogue type.
+ * @param string $typeId The id of the catalogue.
+ * @return string Returns the result as string.
+ * @throws GuzzleException
+ */
+public function getCatalogByType(string $type, string $typeId): string;
 
-// TODO: Client-ID einfügen.
-$clientId = '';
-$softGarden = new SoftGarden();
-$softGarden->setClientId($clientId);
+/**
+ * Get a catalogue by type.
+ *
+ * @param string $type The catalogue type
+ * @return array Returns the result.
+ * @throws GuzzleException
+ */
+public function getCatalogue(string $type): array;
 
-// ODER
-$softGarden = new SoftGarden($clientId);
+/**
+ * Get all channels.
+ *
+ * @return Collection A collection with all channels.
+ * @throws GuzzleException
+ */
+public function getChannels(): Collection;
 
-// Alle Channels holen.
-$channels = $softGarden->getChannels();
+/**
+ * Get a job by id.
+ *
+ * @param string $channelId The channel id.
+ * @param int $jobId The job id.
+ * @return Job The job instance.
+ * @throws GuzzleException
+ */
+public function getJob(string $channelId, int $jobId): Job;
 
-// Den ersten Channel holen.
-$channel = $channels->getItem(0);
+/**
+ * Get the job basket.
+ *
+ * @param string $channelId The channel id.
+ * @return JobSearchResult The JobSearchResult instance.
+ * @throws GuzzleException
+ */
+public function getJobBasket(string $channelId): JobSearchResult;
 
-// Den Basket eines Channels holen.
-$basket = $softGarden->getJobBasket($channel->getId());
+/**
+ * Get all job questions of a job.
+ *
+ * @param int $jobId The job id.
+ * @return Collection A collection with all questions of the job.
+ * @throws GuzzleException
+ */
+public function getJobQuestions(int $jobId): Collection;
 
-// Alle Jobs von einem Channel holen.
-$jobs = $softGarden->getJobs($channel->getId());
+/**
+ * Get all jobs of a channel.
+ *
+ * @param string $channelId The channel id.
+ * @return Collection A collection with all jobs of the channel.
+ * @throws GuzzleException
+ */
+public function getJobs(string $channelId): Collection;
 
-// Den ersten Job holen.
-$job = $jobs->getItem(0);
+/**
+ * @return bool
+ */
+public function isUseAutomaticCatalogueCompletion(): bool;
 
-// Den Job mit ID xy holen.
-$myJob = $softGarden->getJob($channel->getId(), $job->getId());
+/**
+ * @param bool $useAutomaticCatalogueCompletion
+ */
+public function setUseAutomaticCatalogueCompletion(bool $useAutomaticCatalogueCompletion): void;
 
-// Alle Questions von einem Job holen.
-$questions = $softGarden->getJobQuestions($job->getId());
+/**
+ * Search for a job in a channel.
+ *
+ * @param string $channelId The channel id.
+ * @param string $search OPTIONAL. The word we are searching for.
+ * @param string $geoLocation OPTIONAL. The geolocation we are searching for.
+ * @return JobSearchResult The JobSearchResult instance.
+ * @throws GuzzleException
+ */
+public function searchForJob(string $channelId, string $search = '', string $geoLocation = ''): JobSearchResult;
 
-// Es ist möglich, die Rückgabewerte als Array zu holen:
-$channelArray = $channels->toArray();
+/**
+ * Create a new applicant.
+ *
+ * @param array $data The applicant data.
+ * @return ApplicantData The ApplicantData instance.
+ * @throws GuzzleException
+ */
+public function createApplicant(array $data): ApplicantData;
+
+/**
+ * Check if an applicant exist.
+ *
+ * @param array $data The applicant data.
+ * @return bool Returns true if applicant exists.
+ * @throws GuzzleException
+ */
+public function applicantExists(array $data): bool;
+
+/**
+ * Get the user access token for an applicant.
+ *
+ * @param ApplicantData $applicant The applicant instance.
+ * @return string The user access token of the applicant.
+ * @throws GuzzleException
+ */
+public function getUserAccessToken(ApplicantData $applicant): string;
+
+/**
+ * Check if applicant has already applied to a job.
+ *
+ * @param string $jobId The job id where the applicant want to apply to.
+ * @param string $uat The user access token of the applicant.
+ * @return bool Returns true if the applicant has already applied to this job.
+ * @throws GuzzleException
+ */
+public function hasApplied(string $jobId, string $uat): bool;
+
+/**
+ * Start the application.
+ *
+ * @param string $jobId The job id where the applicant want to apply to.
+ * @param string $uat The user access token of the applicant.
+ * @return string Returns the application id.
+ * @throws GuzzleException
+ */
+public function startApplication(string $jobId, string $uat): string;
 ```
 
 ## Rückgabewerte
 
+__ApplicantData__
+
+| Variable            | Type    | Default |
+|---------------------|---------|--------:|
+| id                  | string  |      '' |
+| salutation          | string  |      '' |
+| firstname           | string  |      '' |
+| lastname            | string  |      '' |
+| email               | string  |      '' |
+| workEmail           | string  |      '' |
+| username            | string  |      '' |
+| password            | string  |      '' |
+| locale              | string  |    'de' |
+| internal            | boolean |    true |
+| dataPrivacyAccepted | boolean |    true |
+
+__ApplicationData__
+
+| Variable            | Type    | Default |
+|---------------------|---------|--------:|
+| applicationId       | string  |      '' |
+| status              | string  |      '' |
+| applicationEditable | boolean |   false |
+| createdOn           | string  |      '' |
+| lastChangedOn       | string  |      '' |
+| submittedOn         | string  |      '' |
+| jobId               | string  |      '' |
+| jobName             | string  |      '' |
+| firstname           | string  |      '' |
+| lastname            | string  |      '' |
+| sex                 | string  |      '' |
+| academictitle       | string  |      '' |
+| email               | string  |      '' |
+| externalProfileUrl  | string  |      '' |
+| locale              | string  |    'de' |
+| street              | string  |      '' |
+| zip                 | string  |      '' |
+| city                | string  |      '' |
+| country             | string  |      '' |
+| nationality         | string  |      '' |
+| phone               | string  |      '' |
+| mobilePhone         | string  |      '' |
+| dateofbirth         | string  |      '' |
+| coverLetterText     | string  |      '' |
+| region              | string  |      '' |
+
 __Channel__
 
-| Variable   | Typ     | Standard |
-|------------|---------|---------:|
-| id         | string  |       '' |
-| name       | string  |       '' |
-| accessible | boolean |    false |
+| Variable   | Type    | Default |
+|------------|---------|--------:|
+| id         | string  |      '' |
+| name       | string  |      '' |
+| accessible | boolean |   false |
 
 __Collection__
 
-| Variable | Typ   | Standard |
-|----------|-------|---------:|
-| items    | array |       [] |
+| Variable | Type  | Default |
+|----------|-------|--------:|
+| items    | array |      [] |
 
 __Job__
 
-| Variable               | Typ     | Standard |
-|------------------------|---------|---------:|
-| jobDbId                | integer |        0 |
-| externalPostingName    | string  |       '' |
-| internalPostingName    | string  |       '' |
-| applyOnlineLink        | string  |       '' |
-| jobCategories          | array   |       [] |
-| audiences              | array   |       [] |
-| employmentTypes        | array   |       [] |
-| workTimes              | array   |       [] |
-| industries             | array   |       [] |
-| workExperiences        | array   |       [] |
-| geoLat                 | string  |       '' |
-| geoLong                | string  |       '' |
-| geoName                | string  |       '' |
-| geoCountry             | string  |       '' |
-| geoState               | string  |       '' |
-| geoCity                | string  |       '' |
-| geoZip                 | string  |       '' |
-| geoStreet              | string  |       '' |
-| jobAdText              | string  |       '' |
-| jobStartDate           | integer |        0 |
-| postingLastUpdatedDate | integer |        0 |
-| jobOwnerSalutation     | string  |       '' |
-| jobOwnerTitle          | string  |       '' |
-| jobOwnerFirstname      | string  |       '' |
-| jobOwnerLastname       | string  |       '' |
-| jobOwnerStreet         | string  |       '' |
-| jobOwnerCity           | string  |       '' |
-| jobOwnerZip            | string  |       '' |
-| jobOwnerPhone          | string  |       '' |
-| jobOwnerEmail          | string  |       '' |
-| jobOwnerAvatarurl      | string  |       '' |
-| jobOwnerFunction       | string  |       '' |
-| jobAdUrl               | string  |       '' |
-| companyName            | string  |       '' |
-| companyId              | string  |       '' |
-| projectNumber          | string  |       '' |
-| internalReferenceId    | string  |       '' |
-| locale                 | string  |       '' |
-| keywords               | string  |       '' |
+| Variable               | Type    | Default |
+|------------------------|---------|--------:|
+| jobDbId                | integer |       0 |
+| externalPostingName    | string  |      '' |
+| internalPostingName    | string  |      '' |
+| applyOnlineLink        | string  |      '' |
+| jobCategories          | array   |      [] |
+| audiences              | array   |      [] |
+| employmentTypes        | array   |      [] |
+| workTimes              | array   |      [] |
+| industries             | array   |      [] |
+| workExperiences        | array   |      [] |
+| geoLat                 | string  |      '' |
+| geoLong                | string  |      '' |
+| geoName                | string  |      '' |
+| geoCountry             | string  |      '' |
+| geoState               | string  |      '' |
+| geoCity                | string  |      '' |
+| geoZip                 | string  |      '' |
+| geoStreet              | string  |      '' |
+| jobAdText              | string  |      '' |
+| jobStartDate           | integer |       0 |
+| postingLastUpdatedDate | integer |       0 |
+| jobOwnerSalutation     | string  |      '' |
+| jobOwnerTitle          | string  |      '' |
+| jobOwnerFirstname      | string  |      '' |
+| jobOwnerLastname       | string  |      '' |
+| jobOwnerStreet         | string  |      '' |
+| jobOwnerCity           | string  |      '' |
+| jobOwnerZip            | string  |      '' |
+| jobOwnerPhone          | string  |      '' |
+| jobOwnerEmail          | string  |      '' |
+| jobOwnerAvatarurl      | string  |      '' |
+| jobOwnerFunction       | string  |      '' |
+| jobAdUrl               | string  |      '' |
+| companyName            | string  |      '' |
+| companyId              | string  |      '' |
+| projectNumber          | string  |      '' |
+| internalReferenceId    | string  |      '' |
+| locale                 | string  |      '' |
+| keywords               | string  |      '' |
 
 __JobQuestion__
 
-| Variable      | Typ        | Standard |
-|---------------|------------|---------:|
-| id            | integer    |        0 |
-| question      | string     |       '' |
-| type          | string     |       '' |
-| answerCatalog | array/null |     null |
+| Variable      | Type       | Default |
+|---------------|------------|--------:|
+| id            | integer    |       0 |
+| question      | string     |      '' |
+| type          | string     |      '' |
+| answerCatalog | array/null |    null |
 
 __JobSearchResult__
 
-| Variable           | Typ                            | Standard |
-|--------------------|--------------------------------|---------:|
-| itemsPerPage       | integer                        |        0 |
-| numPages           | integer                        |        0 |
-| offset             | integer                        |        0 |
-| actualPage         | integer                        |        0 |
-| firstPostingOnPage | integer                        |        0 |
-| lastPostingOnPage  | integer                        |        0 |
-| totalNumberOfJobs  | integer                        |        0 |
-| result             | Collection&lt;SearchResult&gt; |        0 |
+| Variable           | Type                           | Default |
+|--------------------|--------------------------------|--------:|
+| itemsPerPage       | integer                        |       0 |
+| numPages           | integer                        |       0 |
+| offset             | integer                        |       0 |
+| actualPage         | integer                        |       0 |
+| firstPostingOnPage | integer                        |       0 |
+| lastPostingOnPage  | integer                        |       0 |
+| totalNumberOfJobs  | integer                        |       0 |
+| result             | Collection&lt;SearchResult&gt; |       0 |
 
 __SearchResult__
 
-| Variable                | Typ                | Standard |
-|-------------------------|--------------------|---------:|
-| jobPostingId            | integer            |        0 |
-| postingVersionId        | integer            |        0 |
-| title                   | string             |       '' |
-| applyOnlineLink         | string             |       '' |
-| config                  | SearchResultConfig |     null |
-| jobStartDate            | integer            |        0 |
-| postingVersionStartDate | integer            |        0 |
-| postingVersionEndDate   | integer            |        0 |
+| Variable                | Type               | Default |
+|-------------------------|--------------------|--------:|
+| jobPostingId            | integer            |       0 |
+| postingVersionId        | integer            |       0 |
+| title                   | string             |      '' |
+| applyOnlineLink         | string             |      '' |
+| config                  | SearchResultConfig |    null |
+| jobStartDate            | integer            |       0 |
+| postingVersionStartDate | integer            |       0 |
+| postingVersionEndDate   | integer            |       0 |
 
 __SearchResultConfig__
 
-| Variable                 | Typ   | Standard |
-|--------------------------|-------|---------:|
-| projectLocation          | array |       [] |
-| projectNumber            | array |       [] |
-| audience                 | array |       [] |
-| projectLocationGerman    | array |       [] |
-| location                 | array |       [] |
-| company                  | array |       [] |
-| softgardenvisibility     | array |       [] |
-| internalPostingName      | array |       [] |
-| listingStartDate         | array |       [] |
-| jobcategory              | array |       [] |
-| projectCompanyNameGerman | array |       [] |
+| Variable                 | Type  | Default |
+|--------------------------|-------|--------:|
+| projectLocation          | array |      [] |
+| projectNumber            | array |      [] |
+| audience                 | array |      [] |
+| projectLocationGerman    | array |      [] |
+| location                 | array |      [] |
+| company                  | array |      [] |
+| softgardenvisibility     | array |      [] |
+| internalPostingName      | array |      [] |
+| listingStartDate         | array |      [] |
+| jobcategory              | array |      [] |
+| projectCompanyNameGerman | array |      [] |
 
 ## Verschiedenes
 
