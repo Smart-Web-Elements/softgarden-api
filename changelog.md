@@ -1,5 +1,9 @@
 # SoftGarden API
 
+## SoftGarden API v1.2.4
+
+- Fixed an issue with non json responses
+
 ## SoftGarden API v1.2.3
 
 - Added method to store application data and finalize it
