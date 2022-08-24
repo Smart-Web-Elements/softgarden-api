@@ -142,6 +142,28 @@ public function hasApplied(string $jobId, string $uat): bool;
  * @throws GuzzleException
  */
 public function startApplication(string $jobId, string $uat): string;
+
+/**
+ * Send application information.
+ *
+ * @param string $applicationId The application id.
+ * @param string $uat The user access token.
+ * @param array $applicationData The application data. See https://dev.softgarden.de/frontend-v3/bewerbungsinformationen-speichern/
+ * @return void
+ * @throws GuzzleException
+ */
+public function sendApplicationInformation(string $applicationId, string $uat, array $applicationData): void;
+
+/**
+ * Finalize the application.
+ *
+ * @param string $applicationId The application id.
+ * @param string $uat The user access token of the applicant.
+ * @param ApplicantData $applicant The applicant instance.
+ * @return void
+ * @throws GuzzleException
+ */
+public function finalizeApplication(string $applicationId, string $uat, ApplicantData $applicant): void;
 ```
 
 ## Return values

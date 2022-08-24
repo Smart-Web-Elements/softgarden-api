@@ -25,10 +25,25 @@ class SoftGarden extends SoftGardenBasic
      * Catalogue types.
      */
     const JOB_CATEGORIES = 'JOB_CATEGORY';
+    /**
+     *
+     */
     const AUDIENCES = 'AUDIENCE';
+    /**
+     *
+     */
     const EMPLOYMENT_TYPES = 'EMPLOYMENT_TYPE';
+    /**
+     *
+     */
     const WORK_TIMES = 'WORKING_HOURS';
+    /**
+     *
+     */
     const INDUSTRIES = 'POSITION_INDUSTRY';
+    /**
+     *
+     */
     const WORK_EXPERIENCES = 'WORK_EXPERIENCE';
 
     /**
@@ -347,5 +362,39 @@ class SoftGarden extends SoftGardenBasic
         $response = $this->getResponse(true, [], $uat);
 
         return $response[0];
+    }
+
+    /**
+     * Send application information.
+     *
+     * @param string $applicationId The application id.
+     * @param string $uat The user access token.
+     * @param array $applicationData The application data. See https://dev.softgarden.de/frontend-v3/bewerbungsinformationen-speichern/
+     * @return void
+     * @throws GuzzleException
+     */
+    public function sendApplicationInformation(string $applicationId, string $uat, array $applicationData): void
+    {
+        $this->uri = sprintf('frontend/applications/%s', $applicationId);
+        $this->version = 3;
+
+        $this->getResponse(true, $applicationData, $uat);
+    }
+
+    /**
+     * Finalize the application.
+     *
+     * @param string $applicationId The application id.
+     * @param string $uat The user access token of the applicant.
+     * @param ApplicantData $applicant The applicant instance.
+     * @return void
+     * @throws GuzzleException
+     */
+    public function finalizeApplication(string $applicationId, string $uat, ApplicantData $applicant): void
+    {
+        $this->uri = sprintf('frontend/applications/%s/submit', $applicationId);
+        $this->version = 3;
+
+        $this->getResponse('true', $applicant->toArray(), $uat);
     }
 }
