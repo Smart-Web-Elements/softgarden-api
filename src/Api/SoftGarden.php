@@ -146,9 +146,7 @@ class SoftGarden extends SoftGardenBasic
         ];
 
         return new JobSearchResult(
-            $this->getResponse(false, $queryArguments),
-            '',
-            $this->useAutomaticCatalogueCompletion
+            $this->getResponse(false, $queryArguments), '', $this->useAutomaticCatalogueCompletion
         );
     }
 
@@ -236,17 +234,15 @@ class SoftGarden extends SoftGardenBasic
         }
 
         return new JobSearchResult(
-            $this->getResponse(false, $queryArguments),
-            '',
-            $this->useAutomaticCatalogueCompletion
+            $this->getResponse(false, $queryArguments), '', $this->useAutomaticCatalogueCompletion
         );
     }
 
     /**
      * Create a new applicant.
      *
-     * @param array $data
-     * @return ApplicantData
+     * @param array $data The applicant data.
+     * @return ApplicantData The ApplicantData instance.
      * @throws GuzzleException
      */
     public function createApplicant(array $data): ApplicantData
@@ -269,8 +265,8 @@ class SoftGarden extends SoftGardenBasic
     /**
      * Check if an applicant exist.
      *
-     * @param array $data
-     * @return bool
+     * @param array $data The applicant data.
+     * @return bool Returns true if applicant exists.
      * @throws GuzzleException
      */
     public function applicantExists(array $data): bool
@@ -296,10 +292,10 @@ class SoftGarden extends SoftGardenBasic
     }
 
     /**
-     * Get UAT
+     * Get the user access token for an applicant.
      *
-     * @param ApplicantData $applicant
-     * @return string
+     * @param ApplicantData $applicant The applicant instance.
+     * @return string The user access token of the applicant.
      * @throws GuzzleException
      */
     public function getUserAccessToken(ApplicantData $applicant): string
@@ -318,11 +314,11 @@ class SoftGarden extends SoftGardenBasic
     }
 
     /**
-     * Check if applicant has already applied
+     * Check if applicant has already applied to a job.
      *
-     * @param string $jobId
-     * @param string $uat
-     * @return bool
+     * @param string $jobId The job id where the applicant want to apply to.
+     * @param string $uat The user access token of the applicant.
+     * @return bool Returns true if the applicant has already applied to this job.
      * @throws GuzzleException
      */
     public function hasApplied(string $jobId, string $uat): bool
@@ -336,11 +332,11 @@ class SoftGarden extends SoftGardenBasic
     }
 
     /**
-     * Start the application
+     * Start the application.
      *
-     * @param string $jobId
-     * @param string $uat
-     * @return string
+     * @param string $jobId The job id where the applicant want to apply to.
+     * @param string $uat The user access token of the applicant.
+     * @return string Returns the application id.
      * @throws GuzzleException
      */
     public function startApplication(string $jobId, string $uat): string

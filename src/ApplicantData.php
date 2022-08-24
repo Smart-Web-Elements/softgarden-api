@@ -3,7 +3,10 @@
 namespace SWE\SoftGardenApi;
 
 /**
+ * Class ApplicantData
  *
+ * @package SWE\SoftGardenApi
+ * @author Luca Braun <l.braun@s-w-e.com>
  */
 class ApplicantData extends AbstractDataSet
 {

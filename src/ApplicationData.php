@@ -2,56 +2,137 @@
 
 namespace SWE\SoftGardenApi;
 
+/**
+ * Class ApplicationData
+ *
+ * @package SWE\SoftGardenApi
+ * @author Luca Braun <l.braun@s-w-e.com>
+ */
 class ApplicationData extends AbstractDataSet
 {
+    /**
+     * @var string
+     */
     protected string $applicationId = '';
 
+    /**
+     * @var string
+     */
     protected string $status = '';
 
+    /**
+     * @var bool
+     */
     protected bool $applicationEditable = false;
 
+    /**
+     * @var string
+     */
     protected string $createdOn = '';
 
+    /**
+     * @var string
+     */
     protected string $lastChangedOn = '';
 
+    /**
+     * @var string
+     */
     protected string $submittedOn = '';
 
+    /**
+     * @var string
+     */
     protected string $jobId = '';
 
+    /**
+     * @var string
+     */
     protected string $jobName = '';
 
+    /**
+     * @var string
+     */
     protected string $firstname = '';
 
+    /**
+     * @var string
+     */
     protected string $lastname = '';
 
+    /**
+     * @var string
+     */
     protected string $sex = '';
 
+    /**
+     * @var string
+     */
     protected string $academictitle = '';
 
+    /**
+     * @var string
+     */
     protected string $email = '';
 
+    /**
+     * @var string
+     */
     protected string $externalProfileUrl = '';
 
+    /**
+     * @var string
+     */
     protected string $locale = 'de';
 
+    /**
+     * @var string
+     */
     protected string $street = '';
 
+    /**
+     * @var string
+     */
     protected string $zip = '';
 
+    /**
+     * @var string
+     */
     protected string $city = '';
 
+    /**
+     * @var string
+     */
     protected string $country = '';
 
+    /**
+     * @var string
+     */
     protected string $nationality = '';
 
+    /**
+     * @var string
+     */
     protected string $phone = '';
 
+    /**
+     * @var string
+     */
     protected string $mobilePhone = '';
 
+    /**
+     * @var string
+     */
     protected string $dateofbirth = '';
 
+    /**
+     * @var string
+     */
     protected string $coverLetterText = '';
 
+    /**
+     * @var string
+     */
     protected string $region = '';
 
     /**
