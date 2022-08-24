@@ -1,5 +1,9 @@
 # SoftGarden API
 
+## SoftGarden API v1.2.2
+
+- Just a commit to fix a confusing bug with packagist.org
+
 ## SoftGarden API v1.2.1
 
 - Fixed Singleton
