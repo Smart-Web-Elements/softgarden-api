@@ -243,7 +243,11 @@ abstract class SoftGardenBasic
 
         $response = $this->client->request($method, $this->getUrl(), $options);
         $responseBody = $response->getBody()->getContents();
-        $decodedResponse = $json ? json_decode($responseBody, true) : $responseBody;
+        $decodedResponse = json_decode($responseBody, true);
+
+        if (is_null($decodedResponse) && !$json) {
+            $decodedResponse = $responseBody;
+        }
 
         return is_array($decodedResponse) ? $decodedResponse : [$decodedResponse];
     }
