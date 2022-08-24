@@ -26,9 +26,9 @@ abstract class SoftGardenBasic
     /**
      * The SoftGardenBasic instance.
      *
-     * @var SoftGardenBasic
+     * @var SoftGardenBasic|null
      */
-    protected static SoftGardenBasic $instance;
+    private static ?SoftGardenBasic $instance = null;
     /**
      * The api version. Some requests have to be done in v2, others in v3.
      *
@@ -66,7 +66,7 @@ abstract class SoftGardenBasic
      * @param string $clientId OPTIONAL. The client id for the authentication of each request.
      * @param string $clientSecret OPTIONAL. The client secret for the authentication of each post request.
      */
-    public function __construct(string $clientId = '', string $clientSecret = '')
+    private function __construct(string $clientId = '', string $clientSecret = '')
     {
         // Check if the DEBUG constant is set.
         self::checkDebugConstant();
@@ -83,14 +83,6 @@ abstract class SoftGardenBasic
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->client = new Client($clientOptions);
-
-        // Get the SoftGardenBasic instance.
-        if (isset(static::$instance)) {
-            return static::getInstance($clientId, $clientSecret);
-        }
-        static::$instance = $this;
-
-        return static::$instance;
     }
 
     /**
@@ -253,6 +245,20 @@ abstract class SoftGardenBasic
         $decodedResponse = json_decode($response->getBody()->getContents(), true);
 
         return is_array($decodedResponse) ? $decodedResponse : [$decodedResponse];
+    }
+
+    /**
+     * @return void
+     */
+    private function __clone()
+    {
+    }
+
+    /**
+     * @return void
+     */
+    private function __wakeup()
+    {
     }
 
     /**
