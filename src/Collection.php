@@ -4,6 +4,7 @@ namespace SWE\SoftGardenApi;
 
 
 use ArrayIterator;
+use Countable;
 use IteratorAggregate;
 
 /**
@@ -12,7 +13,7 @@ use IteratorAggregate;
  * @package SWE\SoftGardenApi
  * @author Luca Braun <l.braun@s-w-e.com>
  */
-class Collection extends AbstractDataSet implements IteratorAggregate
+class Collection extends AbstractDataSet implements IteratorAggregate, Countable
 {
     /**
      * @var array
@@ -129,5 +130,13 @@ class Collection extends AbstractDataSet implements IteratorAggregate
     public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->getItems());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function count(): int
+    {
+        return count($this->getItems());
     }
 }

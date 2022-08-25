@@ -4,13 +4,15 @@ use SWE\SoftGardenApi\Api\SoftGarden;
 use SWE\SoftGardenApi\Channel;
 use SWE\SoftGardenApi\Job;
 
-define('DEBUG', false);
+const DEBUG = false;
+
+require_once __DIR__ . '/vendor/autoload.php';
 
 $break = PHP_EOL . PHP_EOL;
 
 // TODO: Paste in your client id.
 $clientId = '';
-$softGarden = new SoftGarden();
+$softGarden = SoftGarden::getInstance();
 $softGarden->setClientId($clientId);
 
 // Get all channels.

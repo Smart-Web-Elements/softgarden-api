@@ -103,7 +103,7 @@ class SoftGarden extends SoftGardenBasic
     /**
      * Get all channels.
      *
-     * @return Collection A collection with all channels.
+     * @return Collection<Channel> A collection with all channels.
      * @throws GuzzleException
      */
     public function getChannels(): Collection
@@ -170,7 +170,7 @@ class SoftGarden extends SoftGardenBasic
      * Get all job questions of a job.
      *
      * @param int $jobId The job id.
-     * @return Collection A collection with all questions of the job.
+     * @return Collection<JobQuestion> A collection with all questions of the job.
      * @throws GuzzleException
      */
     public function getJobQuestions(int $jobId): Collection
@@ -190,7 +190,7 @@ class SoftGarden extends SoftGardenBasic
      * Get all jobs of a channel.
      *
      * @param string $channelId The channel id.
-     * @return Collection A collection with all jobs of the channel.
+     * @return Collection<Job> A collection with all jobs of the channel.
      * @throws GuzzleException
      */
     public function getJobs(string $channelId): Collection
@@ -267,13 +267,14 @@ class SoftGarden extends SoftGardenBasic
 
         $this->uri = 'frontend/applicants';
         $this->version = 3;
-        try {
-            $this->sendResponse(self::METHOD_POST, $data);
-        } catch (GuzzleException $e) {
-            echo __LINE__;
-            echo $e->getMessage();
-            exit();
+
+        if (DEBUG) {
+            var_dump(__METHOD__);
+            var_dump('Applicant Array: ' . var_export($data, true));
+            var_dump('Applicant Object: ' . var_export($applicant, true));
         }
+
+        $this->sendResponse(self::METHOD_POST, $data);
 
         return $applicant;
     }
@@ -295,6 +296,12 @@ class SoftGarden extends SoftGardenBasic
             'username' => $applicant->getUsername(),
         ];
 
+        if (DEBUG) {
+            var_dump(__METHOD__);
+            var_dump('Check for username');
+            var_dump('Username: ' . $fields['username']);
+        }
+
         $response = $this->sendResponse(self::METHOD_GET, $fields);
 
         if ($response[0] === true) {
@@ -302,6 +309,16 @@ class SoftGarden extends SoftGardenBasic
         }
 
         $this->uri = 'frontend/checkMailForExistence';
+        $fields = [
+            'email' => $applicant->getEmail(),
+        ];
+
+        if (DEBUG) {
+            var_dump(__METHOD__);
+            var_dump('Check for email');
+            var_dump('Email: ' . $fields['email']);
+        }
+
         $response = $this->sendResponse(self::METHOD_GET, $fields);
 
         return $response[0] === true;
@@ -324,6 +341,13 @@ class SoftGarden extends SoftGardenBasic
             'password' => $applicant->getPassword(),
         ];
 
+        if (DEBUG) {
+            var_dump(__METHOD__);
+            var_dump('Grant Type: ' . $data['grant_type']);
+            var_dump('Username: ' . $data['username']);
+            var_dump('Password empty: ' . (empty($data['password'] ? 'true' : 'false')));
+        }
+
         $response = $this->sendResponse(self::METHOD_POST, $data, '', false);
 
         return $response['access_token'];
@@ -342,6 +366,12 @@ class SoftGarden extends SoftGardenBasic
         $this->uri = sprintf('frontend/jobs/%s/applied', $jobId);
         $this->version = 3;
 
+        if (DEBUG) {
+            var_dump(__METHOD__);
+            var_dump('Job ID: ' . $jobId);
+            var_dump('User Access Token empty: ' . (empty($uat ? 'true' : 'false')));
+        }
+
         $response = $this->sendResponse(self::METHOD_GET, [], $uat);
 
         return $response[0];
@@ -352,7 +382,7 @@ class SoftGarden extends SoftGardenBasic
      *
      * @param string $uat The user access token.
      * @param array $queryParameters OPTIONAL. The query parameters.
-     * @return Collection Returns a collection of ApplicationData instances.
+     * @return Collection<ApplicationData> Returns a collection of ApplicationData instances.
      * @throws GuzzleException
      */
     public function getAllApplications(string $uat, array $queryParameters = []): Collection
@@ -360,7 +390,19 @@ class SoftGarden extends SoftGardenBasic
         $this->uri = 'frontend/applications';
         $this->version = 3;
 
-        return new Collection($this->sendResponse(self::METHOD_GET, $queryParameters, $uat), ApplicationData::class, $this->useAutomaticCatalogueCompletion);
+        if (DEBUG) {
+            var_dump(__METHOD__);
+            foreach ($queryParameters as $key => $value) {
+                var_dump($key . ': ' . $value);
+            }
+            var_dump('User Access Token empty: ' . (empty($uat ? 'true' : 'false')));
+        }
+
+        return new Collection(
+            $this->sendResponse(self::METHOD_GET, $queryParameters, $uat),
+            ApplicationData::class,
+            $this->useAutomaticCatalogueCompletion
+        );
     }
 
     /**
@@ -376,7 +418,17 @@ class SoftGarden extends SoftGardenBasic
         $this->uri = sprintf('frontend/applications/%s', $applicationId);
         $this->version = 3;
 
-        return new ApplicationData($this->sendResponse(self::METHOD_GET, [], $uat), '', $this->useAutomaticCatalogueCompletion);
+        if (DEBUG) {
+            var_dump(__METHOD__);
+            var_dump('Application ID: ' . $applicationId);
+            var_dump('User Access Token empty: ' . (empty($uat ? 'true' : 'false')));
+        }
+
+        return new ApplicationData(
+            $this->sendResponse(self::METHOD_GET, [], $uat),
+            '',
+            $this->useAutomaticCatalogueCompletion
+        );
     }
 
     /**
@@ -391,6 +443,12 @@ class SoftGarden extends SoftGardenBasic
     {
         $this->uri = sprintf('frontend/applications?jobId=%s', $jobId);
         $this->version = 3;
+
+        if (DEBUG) {
+            var_dump(__METHOD__);
+            var_dump('Job ID: ' . $jobId);
+            var_dump('User Access Token empty: ' . (empty($uat ? 'true' : 'false')));
+        }
 
         $response = $this->sendResponse(self::METHOD_POST, [], $uat);
 
@@ -411,6 +469,12 @@ class SoftGarden extends SoftGardenBasic
         $this->uri = sprintf('frontend/applications/%s', $applicationId);
         $this->version = 3;
 
+        if (DEBUG) {
+            var_dump(__METHOD__);
+            var_dump('Application ID: ' . $applicationId);
+            var_dump('User Access Token empty: ' . (empty($uat ? 'true' : 'false')));
+        }
+
         $this->sendResponse(self::METHOD_POST, $applicationData, $uat);
     }
 
@@ -419,16 +483,25 @@ class SoftGarden extends SoftGardenBasic
      *
      * @param string $applicationId The application id.
      * @param string $uat The user access token of the applicant.
-     * @param ApplicantData $applicant The applicant instance.
+     * @param array $applicationData The application information.
      * @return void
      * @throws GuzzleException
      */
-    public function finalizeApplication(string $applicationId, string $uat, ApplicantData $applicant): void
+    public function finalizeApplication(string $applicationId, string $uat, array $applicationData = []): void
     {
         $this->uri = sprintf('frontend/applications/%s/submit', $applicationId);
         $this->version = 3;
 
-        $this->sendResponse(self::METHOD_POST, $applicant->toArray(), $uat);
+        if (DEBUG) {
+            var_dump(__METHOD__);
+            var_dump('Application ID: ' . $applicationId);
+            foreach ($applicationData as $key => $value) {
+                var_dump($key . ': ' . $value);
+            }
+            var_dump('User Access Token empty: ' . (empty($uat ? 'true' : 'false')));
+        }
+
+        $this->sendResponse(self::METHOD_POST, $applicationData, $uat);
     }
 
     /**
@@ -443,6 +516,12 @@ class SoftGarden extends SoftGardenBasic
     {
         $this->uri = sprintf('frontend/applications/%s', $applicationId);
         $this->version = 3;
+
+        if (DEBUG) {
+            var_dump(__METHOD__);
+            var_dump('Application ID: ' . $applicationId);
+            var_dump('User Access Token empty: ' . (empty($uat ? 'true' : 'false')));
+        }
 
         $this->sendResponse(self::METHOD_DELETE, [], $uat);
     }
@@ -459,6 +538,12 @@ class SoftGarden extends SoftGardenBasic
     {
         $this->uri = sprintf('frontend/applications/%s/withdraw', $applicationId);
         $this->version = 3;
+
+        if (DEBUG) {
+            var_dump(__METHOD__);
+            var_dump('Application ID: ' . $applicationId);
+            var_dump('User Access Token empty: ' . (empty($uat ? 'true' : 'false')));
+        }
 
         $this->sendResponse(self::METHOD_POST, [], $uat);
     }

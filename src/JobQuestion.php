@@ -11,6 +11,16 @@ namespace SWE\SoftGardenApi;
  */
 class JobQuestion extends AbstractDataSet
 {
+    const TYPE_TEXT = 'TEXT';
+    const TYPE_TEXTAREA = 'TEXTAREA';
+    const TYPE_YESNO = 'YESNO';
+    const TYPE_CATALOG = 'CATALOG';
+    const TYPES = [
+        self::TYPE_TEXT,
+        self::TYPE_TEXTAREA,
+        self::TYPE_YESNO,
+        self::TYPE_CATALOG,
+    ];
     /**
      * @var int
      */
