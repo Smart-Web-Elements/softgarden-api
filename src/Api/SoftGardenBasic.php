@@ -260,7 +260,7 @@ abstract class SoftGardenBasic
         $responseBody = $response->getBody()->getContents();
         $decodedResponse = json_decode($responseBody, true);
 
-        if (is_null($decodedResponse) && !$json) {
+        if (is_null($decodedResponse) || !$json) {
             $decodedResponse = $responseBody;
         }
 

@@ -460,6 +460,6 @@ class SoftGarden extends SoftGardenBasic
         $this->uri = sprintf('frontend/applications/%s/withdraw', $applicationId);
         $this->version = 3;
 
-        $this->sendResponse(self::METHOD_POST, [], $uat, false);
+        $this->sendResponse(self::METHOD_POST, [], $uat);
     }
 }
