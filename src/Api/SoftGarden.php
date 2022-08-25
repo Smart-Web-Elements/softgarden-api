@@ -444,7 +444,7 @@ class SoftGarden extends SoftGardenBasic
         $this->uri = sprintf('frontend/applications/%s', $applicationId);
         $this->version = 3;
 
-        $this->sendResponse(self::METHOD_DELETE, [], $uat, false);
+        $this->sendResponse(self::METHOD_DELETE, [], $uat);
     }
 
     /**
