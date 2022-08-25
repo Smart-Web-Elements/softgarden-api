@@ -1,5 +1,14 @@
 # SoftGarden API
 
+## SoftGarden API v1.2.5
+
+- Added application methods:
+  - Withdraw an application
+  - Delete an application
+  - Get all applications
+  - Get an application
+- Fixed some issues
+
 ## SoftGarden API v1.2.4
 
 - Fixed an issue with non json responses

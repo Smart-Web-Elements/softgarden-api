@@ -33,7 +33,7 @@ public function getCatalogue(string $type): array;
 /**
  * Get all channels.
  *
- * @return Collection A collection with all channels.
+ * @return Collection<Channel> A collection with all channels.
  * @throws GuzzleException
  */
 public function getChannels(): Collection;
@@ -61,7 +61,7 @@ public function getJobBasket(string $channelId): JobSearchResult;
  * Get all job questions of a job.
  *
  * @param int $jobId The job id.
- * @return Collection A collection with all questions of the job.
+ * @return Collection<JobQuestion> A collection with all questions of the job.
  * @throws GuzzleException
  */
 public function getJobQuestions(int $jobId): Collection;
@@ -70,7 +70,7 @@ public function getJobQuestions(int $jobId): Collection;
  * Get all jobs of a channel.
  *
  * @param string $channelId The channel id.
- * @return Collection A collection with all jobs of the channel.
+ * @return Collection<Job> A collection with all jobs of the channel.
  * @throws GuzzleException
  */
 public function getJobs(string $channelId): Collection;
@@ -134,6 +134,26 @@ public function getUserAccessToken(ApplicantData $applicant): string;
 public function hasApplied(string $jobId, string $uat): bool;
 
 /**
+ * Get all applications of an applicant.
+ *
+ * @param string $uat The user access token.
+ * @param array $queryParameters OPTIONAL. The query parameters.
+ * @return Collection<ApplicationData> Returns a collection of ApplicationData instances.
+ * @throws GuzzleException
+ */
+public function getAllApplications(string $uat, array $queryParameters = []): Collection;
+
+/**
+ * Get an application of an applicant.
+ *
+ * @param string $applicationId The application id.
+ * @param string $uat The user access token.
+ * @return ApplicationData Returns an ApplicationData instance.
+ * @throws GuzzleException
+ */
+public function getApplication(string $applicationId, string $uat): ApplicationData;
+
+/**
  * Start the application.
  *
  * @param string $jobId The job id where the applicant want to apply to.
@@ -159,11 +179,31 @@ public function sendApplicationInformation(string $applicationId, string $uat, a
  *
  * @param string $applicationId The application id.
  * @param string $uat The user access token of the applicant.
- * @param ApplicantData $applicant The applicant instance.
+ * @param array $applicationData The application information.
  * @return void
  * @throws GuzzleException
  */
-public function finalizeApplication(string $applicationId, string $uat, ApplicantData $applicant): void;
+public function finalizeApplication(string $applicationId, string $uat, array $applicationData = []): void;
+
+/**
+ * Delete an application if it's not finalized.
+ *
+ * @param string $applicationId The application id.
+ * @param string $uat The user access token.
+ * @return void
+ * @throws GuzzleException
+ */
+public function deleteApplication(string $applicationId, string $uat): void;
+
+/**
+ * Withdraw a finalized (submitted) application.
+ *
+ * @param string $applicationId The application id.
+ * @param string $uat The user access token.
+ * @return void
+ * @throws GuzzleException
+ */
+public function withdrawApplication(string $applicationId, string $uat): void;
 ```
 
 ## Rückgabewerte
@@ -186,33 +226,36 @@ __ApplicantData__
 
 __ApplicationData__
 
-| Variable            | Type    | Default |
-|---------------------|---------|--------:|
-| applicationId       | string  |      '' |
-| status              | string  |      '' |
-| applicationEditable | boolean |   false |
-| createdOn           | string  |      '' |
-| lastChangedOn       | string  |      '' |
-| submittedOn         | string  |      '' |
-| jobId               | string  |      '' |
-| jobName             | string  |      '' |
-| firstname           | string  |      '' |
-| lastname            | string  |      '' |
-| sex                 | string  |      '' |
-| academictitle       | string  |      '' |
-| email               | string  |      '' |
-| externalProfileUrl  | string  |      '' |
-| locale              | string  |    'de' |
-| street              | string  |      '' |
-| zip                 | string  |      '' |
-| city                | string  |      '' |
-| country             | string  |      '' |
-| nationality         | string  |      '' |
-| phone               | string  |      '' |
-| mobilePhone         | string  |      '' |
-| dateofbirth         | string  |      '' |
-| coverLetterText     | string  |      '' |
-| region              | string  |      '' |
+| Variable                   | Type    | Default |
+|----------------------------|---------|--------:|
+| applicationId              | string  |      '' |
+| status                     | string  |      '' |
+| applicationEditable        | boolean |   false |
+| createdOn                  | string  |      '' |
+| lastChangedOn              | string  |      '' |
+| submittedOn                | string  |      '' |
+| withdrawnOn                | string  |      '' |
+| jobId                      | string  |      '' |
+| jobName                    | string  |      '' |
+| firstname                  | string  |      '' |
+| lastname                   | string  |      '' |
+| sex                        | string  |      '' |
+| academictitle              | string  |      '' |
+| email                      | string  |      '' |
+| externalProfileUrl         | string  |      '' |
+| locale                     | string  |    'de' |
+| street                     | string  |      '' |
+| zip                        | string  |      '' |
+| city                       | string  |      '' |
+| country                    | string  |      '' |
+| nationality                | string  |      '' |
+| phone                      | string  |      '' |
+| mobilePhone                | string  |      '' |
+| dateofbirth                | string  |      '' |
+| coverLetterText            | string  |      '' |
+| region                     | string  |      '' |
+| imported                   | string  |      '' |
+| applicationFeedbackConsent | boolean |   false |
 
 __Channel__
 

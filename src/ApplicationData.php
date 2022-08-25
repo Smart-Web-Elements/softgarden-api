@@ -11,6 +11,22 @@ namespace SWE\SoftGardenApi;
 class ApplicationData extends AbstractDataSet
 {
     /**
+     *
+     */
+    const STATUS_DRAFT = 'DRAFT';
+    /**
+     *
+     */
+    const STATUS_ACTIVE = 'ACTIVE';
+    /**
+     *
+     */
+    const STATUS = [
+        self::STATUS_DRAFT,
+        self::STATUS_ACTIVE,
+    ];
+
+    /**
      * @var string
      */
     protected string $applicationId = '';
@@ -39,6 +55,11 @@ class ApplicationData extends AbstractDataSet
      * @var string
      */
     protected string $submittedOn = '';
+
+    /**
+     * @var string
+     */
+    protected string $withdrawnOn = '';
 
     /**
      * @var string
@@ -136,6 +157,16 @@ class ApplicationData extends AbstractDataSet
     protected string $region = '';
 
     /**
+     * @var string
+     */
+    protected string $imported = '';
+
+    /**
+     * @var bool
+     */
+    protected bool $applicationFeedbackConsent = false;
+
+    /**
      * @return string
      */
     public function getApplicationId(): string
@@ -229,6 +260,22 @@ class ApplicationData extends AbstractDataSet
     public function setSubmittedOn(string $submittedOn): void
     {
         $this->submittedOn = $submittedOn;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWithdrawnOn(): string
+    {
+        return $this->withdrawnOn;
+    }
+
+    /**
+     * @param string $withdrawnOn
+     */
+    public function setWithdrawnOn(string $withdrawnOn): void
+    {
+        $this->withdrawnOn = $withdrawnOn;
     }
 
     /**
@@ -533,6 +580,38 @@ class ApplicationData extends AbstractDataSet
     public function setRegion(string $region): void
     {
         $this->region = $region;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImported(): string
+    {
+        return $this->imported;
+    }
+
+    /**
+     * @param string $imported
+     */
+    public function setImported(string $imported): void
+    {
+        $this->imported = $imported;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isApplicationFeedbackConsent(): bool
+    {
+        return $this->applicationFeedbackConsent;
+    }
+
+    /**
+     * @param bool $applicationFeedbackConsent
+     */
+    public function setApplicationFeedbackConsent(bool $applicationFeedbackConsent): void
+    {
+        $this->applicationFeedbackConsent = $applicationFeedbackConsent;
     }
 
     /**
