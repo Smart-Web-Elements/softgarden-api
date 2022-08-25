@@ -7,6 +7,7 @@
   - Delete an application
   - Get all applications
   - Get an application
+- Fixed some issues
 
 ## SoftGarden API v1.2.4
 
