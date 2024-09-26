@@ -6,15 +6,6 @@ namespace SWE\SoftGardenApi\Api;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 
-/**
- * Class SoftGardenBasic
- *
- * This class holds some basic methods and information for the requests.
- *
- * @package SWE\SoftGardenApi\Api
- * @author Luca Braun <l.braun@s-w-e.com>
- * @abstract
- */
 abstract class SoftGardenBasic
 {
     public const METHOD_GET = 'GET';
@@ -29,55 +20,14 @@ abstract class SoftGardenBasic
         self::METHOD_DELETE,
     ];
 
-    /**
-     * The api domain.
-     *
-     * @var string
-     */
     protected static string $domain = 'https://api.softgarden.io/api/rest';
-    /**
-     * The SoftGardenBasic instance.
-     *
-     * @var SoftGardenBasic|null
-     */
     private static ?SoftGardenBasic $instance = null;
-    /**
-     * The api version. Some requests have to be done in v2, others in v3.
-     *
-     * @var int
-     */
     protected int $version = 3;
-    /**
-     * The requested rest uri.
-     *
-     * @var string
-     */
     protected string $uri;
-    /**
-     * The client id, used for the authentication.
-     *
-     * @var string
-     */
     protected string $clientId;
-    /**
-     * The client secret, used for the authentication.
-     *
-     * @var string
-     */
     protected string $clientSecret;
-    /**
-     * The Guzzle HTTP Client, used for easy requests.
-     *
-     * @var Client
-     */
     protected Client $client;
 
-    /**
-     * SoftGarden constructor.
-     *
-     * @param string $clientId OPTIONAL. The client id for the authentication of each request.
-     * @param string $clientSecret OPTIONAL. The client secret for the authentication of each post request.
-     */
     private function __construct(string $clientId = '', string $clientSecret = '')
     {
         // Check if the DEBUG constant is set.
@@ -86,7 +36,7 @@ abstract class SoftGardenBasic
             var_dump(__METHOD__);
         }
 
-        // Set the basic uri to the client so the base domain don't have to be set every time.
+        // Set the basic uri to the client so the base domain doesn't have to be set every time.
         $clientOptions = [
             'base_uri' => static::$domain,
         ];
@@ -97,12 +47,6 @@ abstract class SoftGardenBasic
         $this->client = new Client($clientOptions);
     }
 
-    /**
-     * Get the SoftGardenBasic instance.
-     *
-     * @param string $clientId OPTIONAL. The client id, used for the authentication.
-     * @return SoftGardenBasic The SoftGardenBasic instance.
-     */
     public static function getInstance(string $clientId = '', string $clientSecret = ''): SoftGardenBasic
     {
         self::checkDebugConstant();
@@ -127,9 +71,6 @@ abstract class SoftGardenBasic
         return static::$instance;
     }
 
-    /**
-     * Check if the DEBUG constant is defined. If not, define the constant to false.
-     */
     private static function checkDebugConstant(): void
     {
         if (!defined('DEBUG')) {
@@ -137,11 +78,6 @@ abstract class SoftGardenBasic
         }
     }
 
-    /**
-     * Get the client id.
-     *
-     * @return string
-     */
     public function getClientId(): string
     {
         if (DEBUG) {
@@ -151,11 +87,6 @@ abstract class SoftGardenBasic
         return $this->clientId;
     }
 
-    /**
-     * Set the client id.
-     *
-     * @param string $clientId
-     */
     public function setClientId(string $clientId): void
     {
         if (DEBUG) {
@@ -164,11 +95,6 @@ abstract class SoftGardenBasic
         $this->clientId = $clientId;
     }
 
-    /**
-     * Get the client secret.
-     *
-     * @return string
-     */
     public function getClientSecret(): string
     {
         if (DEBUG) {
@@ -178,11 +104,6 @@ abstract class SoftGardenBasic
         return $this->clientSecret;
     }
 
-    /**
-     * Set the client secret.
-     *
-     * @param string $clientSecret
-     */
     public function setClientSecret(string $clientSecret): void
     {
         if (DEBUG) {
@@ -192,13 +113,6 @@ abstract class SoftGardenBasic
     }
 
     /**
-     * Execute the request and return the response.
-     *
-     * @param string $method OPTIONAL. Set the request method. Defaults to METHOD_GET.
-     * @param array $postFields OPTIONAL. The post arguments that will be sent als query parameters.
-     * @param string $token OPTIONAL. An access token to do some specific requests.
-     * @param bool $json OPTIONAL. The content type should be in json.
-     * @return array The decoded json response as associative array.
      * @throws GuzzleException
      */
     protected function sendResponse(
@@ -252,7 +166,7 @@ abstract class SoftGardenBasic
             var_dump('Url: ' . $this->getUrl());
             var_dump('Method: ' . $method);
             var_dump(
-                'Options: ' . json_encode($options, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT)
+                'Options: ' . json_encode($options, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT),
             );
         }
 
@@ -267,25 +181,10 @@ abstract class SoftGardenBasic
         return is_array($decodedResponse) ? $decodedResponse : [$decodedResponse];
     }
 
-    /**
-     * @return void
-     */
-    private function __clone()
-    {
-    }
+    private function __clone() {}
 
-    /**
-     * @return void
-     */
-    private function __wakeup()
-    {
-    }
+    private function __wakeup() {}
 
-    /**
-     * Get the rest url.
-     *
-     * @return string The rest url built with the domain, version number and the uri, set from the method.
-     */
     private function getUrl(): string
     {
         $arguments = [

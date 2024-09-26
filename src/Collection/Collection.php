@@ -1,30 +1,23 @@
 <?php
 
-namespace SWE\SoftGardenApi;
+namespace SWE\SoftGardenApi\Collection;
 
 
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use SWE\SoftGardenApi\AbstractDataSet;
 
 /**
- * Class Collection
- *
- * @package SWE\SoftGardenApi
- * @author Luca Braun <l.braun@s-w-e.com>
+ * @template T of AbstractDataSet
  */
 class Collection extends AbstractDataSet implements IteratorAggregate, Countable
 {
     /**
-     * @var array
+     * @var array<T>
      */
     private array $items = [];
 
-    /**
-     * Collection constructor.
-     *
-     * @inheritDoc
-     */
     public function __construct(array $arguments = [], string $FQN = '', bool $automation = false)
     {
         parent::__construct();
@@ -38,9 +31,6 @@ class Collection extends AbstractDataSet implements IteratorAggregate, Countable
         }
     }
 
-    /**
-     * @return array
-     */
     public function __debugInfo(): array
     {
         return [
@@ -49,50 +39,27 @@ class Collection extends AbstractDataSet implements IteratorAggregate, Countable
     }
 
     /**
-     * Add an item to the collection.
-     *
-     * @param AbstractDataSet $item The item to add.
+     * @param T $item
      */
-    public function addItem(AbstractDataSet $item): void
+    public function addItem(object $item): void
     {
         $this->items[] = $item;
     }
 
-    /**
-     * @inheritDoc
-     */
+    public function count(): int
+    {
+        return count($this->getItems());
+    }
+
     public function getId()
     {
         return null;
     }
 
     /**
-     * @inheritDoc
+     * @return T|null
      */
-    public function toArray(): array
-    {
-        $output = $this->getStructure();
-
-        foreach ($this->items as $index => $item) {
-            if (!$item instanceof AbstractDataSet) {
-                continue;
-            }
-            if (!isset($output['items'])) {
-                $output['items'] = [];
-            }
-            $output['items'][$index] = $item->toArray();
-        }
-
-        return $output;
-    }
-
-    /**
-     * Get an item by its index.
-     *
-     * @param int $index The item index.
-     * @return AbstractDataSet|null The item of null if the index does not exist.
-     */
-    public function getItem(int $index): ?AbstractDataSet
+    public function getItem(int $index): ?object
     {
         if (!isset($this->items[$index]) || !$this->items[$index] instanceof AbstractDataSet) {
             return null;
@@ -108,9 +75,7 @@ class Collection extends AbstractDataSet implements IteratorAggregate, Countable
     }
 
     /**
-     * Get all items.
-     *
-     * @return array An array of items.
+     * @return array<T>
      */
     public function getItems(): array
     {
@@ -118,25 +83,31 @@ class Collection extends AbstractDataSet implements IteratorAggregate, Countable
             function ($index) {
                 return $this->getItem($index);
             },
-            array_keys($this->items)
+            array_keys($this->items),
         );
 
         return array_filter($result);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->getItems());
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function count(): int
+    public function toArray(): array
     {
-        return count($this->getItems());
+        $output = $this->getStructure();
+
+        foreach ($this->items as $index => $item) {
+            if (!$item instanceof AbstractDataSet) {
+                continue;
+            }
+            if (!isset($output['items'])) {
+                $output['items'] = [];
+            }
+            $output['items'][$index] = $item->toArray();
+        }
+
+        return $output;
     }
 }

@@ -12,68 +12,39 @@ Klasse `\SWE\SoftGardenApi\Api\SoftGarden` sind einige Methoden zum Abrufen und 
 
 ```php
 /**
- * Get a catalogue value by type.
- *
- * @param string $type The catalogue type.
- * @param string $typeId The id of the catalogue.
- * @return string Returns the result as string.
  * @throws GuzzleException
  */
 public function getCatalogByType(string $type, string $typeId): string;
 
 /**
- * Get a catalogue by type.
- *
- * @param string $type The catalogue type
- * @return array Returns the result.
  * @throws GuzzleException
  */
 public function getCatalogue(string $type): array;
 
 /**
- * Get all channels.
- *
- * @return Collection<Channel> A collection with all channels.
  * @throws GuzzleException
  */
-public function getChannels(): Collection;
+public function getChannels(): ChannelCollection;
 
 /**
- * Get a job by id.
- *
- * @param string $channelId The channel id.
- * @param int $jobId The job id.
- * @return Job The job instance.
  * @throws GuzzleException
  */
 public function getJob(string $channelId, int $jobId): Job;
 
 /**
- * Get the job basket.
- *
- * @param string $channelId The channel id.
- * @return JobSearchResult The JobSearchResult instance.
  * @throws GuzzleException
  */
 public function getJobBasket(string $channelId): JobSearchResult;
 
 /**
- * Get all job questions of a job.
- *
- * @param int $jobId The job id.
- * @return Collection<JobQuestion> A collection with all questions of the job.
  * @throws GuzzleException
  */
-public function getJobQuestions(int $jobId): Collection;
+public function getJobQuestions(int $jobId): JobQuestionCollection;
 
 /**
- * Get all jobs of a channel.
- *
- * @param string $channelId The channel id.
- * @return Collection<Job> A collection with all jobs of the channel.
  * @throws GuzzleException
  */
-public function getJobs(string $channelId): Collection;
+public function getJobs(string $channelId): JobCollection;
 
 /**
  * @return bool
@@ -86,121 +57,61 @@ public function isUseAutomaticCatalogueCompletion(): bool;
 public function setUseAutomaticCatalogueCompletion(bool $useAutomaticCatalogueCompletion): void;
 
 /**
- * Search for a job in a channel.
- *
- * @param string $channelId The channel id.
- * @param string $search OPTIONAL. The word we are searching for.
- * @param string $geoLocation OPTIONAL. The geolocation we are searching for.
- * @return JobSearchResult The JobSearchResult instance.
  * @throws GuzzleException
  */
 public function searchForJob(string $channelId, string $search = '', string $geoLocation = ''): JobSearchResult;
 
 /**
- * Create a new applicant.
- *
- * @param array $data The applicant data.
- * @return ApplicantData The ApplicantData instance.
  * @throws GuzzleException
  */
 public function createApplicant(array $data): ApplicantData;
 
 /**
- * Check if an applicant exist.
- *
- * @param array $data The applicant data.
- * @return bool Returns true if applicant exists.
  * @throws GuzzleException
  */
 public function applicantExists(array $data): bool;
 
 /**
- * Get the user access token for an applicant.
- *
- * @param ApplicantData $applicant The applicant instance.
- * @return string The user access token of the applicant.
  * @throws GuzzleException
  */
 public function getUserAccessToken(ApplicantData $applicant): string;
 
 /**
- * Check if applicant has already applied to a job.
- *
- * @param string $jobId The job id where the applicant want to apply to.
- * @param string $uat The user access token of the applicant.
- * @return bool Returns true if the applicant has already applied to this job.
  * @throws GuzzleException
  */
 public function hasApplied(string $jobId, string $uat): bool;
 
 /**
- * Get all applications of an applicant.
- *
- * @param string $uat The user access token.
- * @param array $queryParameters OPTIONAL. The query parameters.
- * @return Collection<ApplicationData> Returns a collection of ApplicationData instances.
  * @throws GuzzleException
  */
-public function getAllApplications(string $uat, array $queryParameters = []): Collection;
+public function getAllApplications(string $uat, array $queryParameters = []): ApplicationDataCollection;
 
 /**
- * Get an application of an applicant.
- *
- * @param string $applicationId The application id.
- * @param string $uat The user access token.
- * @return ApplicationData Returns an ApplicationData instance.
  * @throws GuzzleException
  */
 public function getApplication(string $applicationId, string $uat): ApplicationData;
 
 /**
- * Start the application.
- *
- * @param string $jobId The job id where the applicant want to apply to.
- * @param string $uat The user access token of the applicant.
- * @return string Returns the application id.
  * @throws GuzzleException
  */
 public function startApplication(string $jobId, string $uat): string;
 
 /**
- * Send application information.
- *
- * @param string $applicationId The application id.
- * @param string $uat The user access token.
- * @param array $applicationData The application data. See https://dev.softgarden.de/frontend-v3/bewerbungsinformationen-speichern/
- * @return void
  * @throws GuzzleException
  */
 public function sendApplicationInformation(string $applicationId, string $uat, array $applicationData): void;
 
 /**
- * Finalize the application.
- *
- * @param string $applicationId The application id.
- * @param string $uat The user access token of the applicant.
- * @param array $applicationData The application information.
- * @return void
  * @throws GuzzleException
  */
 public function finalizeApplication(string $applicationId, string $uat, array $applicationData = []): void;
 
 /**
- * Delete an application if it's not finalized.
- *
- * @param string $applicationId The application id.
- * @param string $uat The user access token.
- * @return void
  * @throws GuzzleException
  */
 public function deleteApplication(string $applicationId, string $uat): void;
 
 /**
- * Withdraw a finalized (submitted) application.
- *
- * @param string $applicationId The application id.
- * @param string $uat The user access token.
- * @return void
  * @throws GuzzleException
  */
 public function withdrawApplication(string $applicationId, string $uat): void;
@@ -326,16 +237,16 @@ __JobQuestion__
 
 __JobSearchResult__
 
-| Variable           | Type                           | Default |
-|--------------------|--------------------------------|--------:|
-| itemsPerPage       | integer                        |       0 |
-| numPages           | integer                        |       0 |
-| offset             | integer                        |       0 |
-| actualPage         | integer                        |       0 |
-| firstPostingOnPage | integer                        |       0 |
-| lastPostingOnPage  | integer                        |       0 |
-| totalNumberOfJobs  | integer                        |       0 |
-| result             | Collection&lt;SearchResult&gt; |       0 |
+| Variable           | Type                   | Default |
+|--------------------|------------------------|--------:|
+| itemsPerPage       | integer                |       0 |
+| numPages           | integer                |       0 |
+| offset             | integer                |       0 |
+| actualPage         | integer                |       0 |
+| firstPostingOnPage | integer                |       0 |
+| lastPostingOnPage  | integer                |       0 |
+| totalNumberOfJobs  | integer                |       0 |
+| result             | SearchResultCollection |       0 |
 
 __SearchResult__
 

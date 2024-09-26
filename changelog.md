@@ -1,5 +1,10 @@
 # SoftGarden API
 
+## SoftGarden API v1.2.7
+
+- Added composer.lock file
+- Added collections
+
 ## SoftGarden API v1.2.6
 
 - Added .gitattributes file

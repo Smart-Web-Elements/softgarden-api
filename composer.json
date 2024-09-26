@@ -6,7 +6,6 @@
     "softgarden",
     "api"
   ],
-  "minimum-stability": "stable",
   "license": "MIT",
   "authors": [
     {

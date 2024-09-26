@@ -39,7 +39,7 @@ echo 'Jobs:' . PHP_EOL;
 var_dump($jobs);
 echo $break;
 
-// Get iterate through jobs of a channel.
+// Get iterating through jobs of a channel.
 $jobs = $softGarden->getJobs($channel->getId());
 echo 'Jobs:' . PHP_EOL;
 foreach ($jobs as $job) {
@@ -53,7 +53,7 @@ if (!$job instanceof Job) {
     return;
 }
 
-// Get the job with the id xy
+// Get the job with the id "xy"
 $myJob = $softGarden->getJob($channel->getId(), $job->getId());
 echo 'Job:' . PHP_EOL;
 var_dump($myJob);
@@ -65,7 +65,7 @@ echo 'Job Questions:' . PHP_EOL;
 var_dump($questions);
 echo $break;
 
-// It is possible to get the result as array instead of objects:
+// It is possible to get the result as an array instead of objects:
 echo 'Channels as array:' . PHP_EOL;
 var_dump($channels->toArray());
 echo $break;

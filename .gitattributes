@@ -11,6 +11,7 @@
 /liesmich.md export-ignore
 /example.php export-ignore
 /Tests export-ignore
+/composer.lock export-ignore
 
 # Enforce checkout with linux lf consistent over all platforms.
 *.html text eol=lf

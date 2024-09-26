@@ -6,28 +6,11 @@ namespace SWE\SoftGardenApi;
 use GuzzleHttp\Exception\GuzzleException;
 use SWE\SoftGardenApi\Api\SoftGarden;
 
-/**
- * Class AbstractDataSet
- *
- * @package SWE\SoftGardenApi
- * @author Luca Braun <l.braun@s-w-e.com>
- * @abstract
- */
 abstract class AbstractDataSet
 {
-    /**
-     * Array of catalogue values.
-     *
-     * @var array
-     */
     protected static array $catalogues = [];
 
     /**
-     * AbstractDataSet constructor.
-     *
-     * @param array $arguments OPTIONAL. The arguments of the Model.
-     * @param string $FQN OPTIONAL. The full qualified class name of the Model.
-     * @param bool $automation OPTIONAL. The catalogue fields should be set automatically.
      * @throws GuzzleException
      */
     public function __construct(array $arguments = [], string $FQN = '', bool $automation = false)
@@ -47,18 +30,8 @@ abstract class AbstractDataSet
         }
     }
 
-    /**
-     * Get the id.
-     *
-     * @return mixed
-     */
     abstract public function getId();
 
-    /**
-     * Get the instance as array.
-     *
-     * @return array
-     */
     public function getStructure(): array
     {
         $structure = [];
@@ -75,42 +48,22 @@ abstract class AbstractDataSet
         return $structure;
     }
 
-    /**
-     * Transform this instance to an array.
-     *
-     * @return array
-     */
     public function toArray(): array
     {
         return $this->getStructure();
     }
 
-    /**
-     * Get all attribute names.
-     *
-     * @return array The attribute names as array.
-     */
     protected function getAttributes(): array
     {
         return array_keys(get_class_vars(static::class));
     }
 
-    /**
-     * Check for an attribute.
-     *
-     * @param string $key The attribute name.
-     * @return bool True if the attribute exist, else false.
-     */
     protected function hasAttribute(string $key): bool
     {
         return in_array($key, $this->getAttributes());
     }
 
     /**
-     * Set a catalogue value.
-     *
-     * @param string $key The catalogue field name.
-     * @return array An array of catalogue values.
      * @throws GuzzleException
      */
     private function setByCatalogue(string $key): array
