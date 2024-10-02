@@ -39,7 +39,7 @@ class Collection extends AbstractDataSet implements IteratorAggregate, Countable
     }
 
     /**
-     * @param T $item
+     * @param object|T $item
      */
     public function addItem(object $item): void
     {

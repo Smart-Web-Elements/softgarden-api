@@ -9,7 +9,6 @@ use SWE\SoftGardenApi\ApplicationData;
 use SWE\SoftGardenApi\Channel;
 use SWE\SoftGardenApi\Collection\ApplicationDataCollection;
 use SWE\SoftGardenApi\Collection\ChannelCollection;
-use SWE\SoftGardenApi\Collection\Collection;
 use SWE\SoftGardenApi\Collection\JobCollection;
 use SWE\SoftGardenApi\Collection\JobQuestionCollection;
 use SWE\SoftGardenApi\Job;
