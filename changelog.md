@@ -1,5 +1,12 @@
 # SoftGarden API
 
+## SoftGarden API v1.2.8
+
+- Added compatibility to guzzlehttp/guzzle v6
+- Removed composer.lock file
+- Removed unused import
+- Updated addItem signature
+
 ## SoftGarden API v1.2.7
 
 - Added composer.lock file
@@ -21,7 +28,7 @@
 
 ## SoftGarden API v1.2.4
 
-- Fixed an issue with non json responses
+- Fixed an issue with non JSON responses
 
 ## SoftGarden API v1.2.3
 
@@ -45,7 +52,7 @@
 
 ## SoftGarden API v1.1.1
 
-- Updated some meta information in composer.json
+- Updated some meta-information in composer.json
 
 ## SoftGarden API v1.1.0
 
